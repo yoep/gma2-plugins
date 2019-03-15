@@ -1,7 +1,17 @@
---- Config
---- ******
---- Generic config
+--- *** Config ***
+--- Var config
 picker_page_var = "picker_page";
+beam_color_var = "beam_color";
+spot_color_var = "spot_color";
+wash1_color_var = "wash1_color";
+wash2_color_var = "wash2_color";
+led_color_var = "led_color";
+--- Group config
+beam_group_index = 5;
+spot_group_index = 4;
+wash1_group_index = 3;
+wash2_group_index = 6;
+led_group_index = 7;
 --- Button Executor config
 executor_zoom_index = 106;
 executor_dim_index = 107;
@@ -36,7 +46,7 @@ exec_button_page = "";
 exec_color_picker_page = "";
 macro_start_index = "";
 seq_start_index = "";
-effect = "";
+effect_index = "";
 effect_executor = "";
 
 function create_color_picker_macros()
@@ -63,28 +73,28 @@ function create_exec_buttons()
     log("Creating color picker exec buttons...");
 
     create_sequence(sequence, "ZOOM", get_executor_index(_G.executor_zoom_index));
-    create_cue(sequence, 1, "ON", create_cue_cmd_on("1." .. effect .. "." .. _G.zoom_effect_line_index));
-    create_cue(sequence, 2, "OFF", create_cue_cmd_off("1." .. effect .. "." .. _G.zoom_effect_line_index));
+    create_cue(sequence, 1, "ON", create_cue_cmd_on("1." .. effect_index .. "." .. _G.zoom_effect_line_index));
+    create_cue(sequence, 2, "OFF", create_cue_cmd_off("1." .. effect_index .. "." .. _G.zoom_effect_line_index));
 
     sequence = sequence + 1;
     create_sequence(sequence, "DIM", get_executor_index(_G.executor_dim_index));
-    create_cue(sequence, 1, "ON", create_cue_cmd_on("1." .. effect .. "." .. _G.dim_effect_line_index));
-    create_cue(sequence, 2, "OFF", create_cue_cmd_off("1." .. effect .. "." .. _G.dim_effect_line_index));
+    create_cue(sequence, 1, "ON", create_cue_cmd_on("1." .. effect_index .. "." .. _G.dim_effect_line_index));
+    create_cue(sequence, 2, "OFF", create_cue_cmd_off("1." .. effect_index .. "." .. _G.dim_effect_line_index));
 
     sequence = sequence + 1;
     create_sequence(sequence, "GOBO", get_executor_index(_G.executor_gobo_index));
-    create_cue(sequence, 1, "ON", create_cue_cmd_on("1." .. effect .. ".6 Thru 1." .. effect .. ".7"));
-    create_cue(sequence, 2, "OFF", create_cue_cmd_off("1." .. effect .. ".6 Thru 1." .. effect .. ".7"));
+    create_cue(sequence, 1, "ON", create_cue_cmd_on("1." .. effect_index .. ".6 Thru 1." .. effect_index .. ".7"));
+    create_cue(sequence, 2, "OFF", create_cue_cmd_off("1." .. effect_index .. ".6 Thru 1." .. effect_index .. ".7"));
 
     sequence = sequence + 1;
     create_sequence(sequence, "SHUTTER", get_executor_index(_G.executor_shutter_index));
-    create_cue(sequence, 1, "ON", create_cue_cmd_on("1." .. effect .. "." .. _G.shutter_effect_line_index));
-    create_cue(sequence, 2, "OFF", create_cue_cmd_off("1." .. effect .. "." .. _G.shutter_effect_line_index));
+    create_cue(sequence, 1, "ON", create_cue_cmd_on("1." .. effect_index .. "." .. _G.shutter_effect_line_index));
+    create_cue(sequence, 2, "OFF", create_cue_cmd_off("1." .. effect_index .. "." .. _G.shutter_effect_line_index));
 
     sequence = sequence + 1;
     create_sequence(sequence, "PRESETS", get_executor_index(_G.executor_presets_index), get_color_blue());
-    create_cue(sequence, 1, "CHASE 2", "GoTo Macro");
-    create_cue(sequence, 2, "CHASE 3", "GoTo Macro");
+    create_cue(sequence, 1, "CHASE 2",  string.format("GoTo Executor %s Cue %i", get_executor_index(_G.executor_form_index), 1));
+    create_cue(sequence, 2, "CHASE 3",  string.format("GoTo Executor %s Cue %i", get_executor_index(_G.executor_form_index), 1));
 
     sequence = sequence + 1;
     create_sequence(sequence, "COLOR 1", get_executor_index(_G.executor_color1_index));
@@ -96,8 +106,8 @@ function create_exec_buttons()
 
     sequence = sequence + 1;
     create_sequence(sequence, "COLOR", get_executor_index(_G.executor_color_index));
-    create_cue(sequence, 1, "REL", string.format("Assign Effect 1.%i.1 Thru 1.%i.3 /mode=rel;", _G.effect, _G.effect));
-    create_cue(sequence, 2, "ABS", string.format("Assign Effect 1.%i.1 Thru 1.%i.3 /mode=abs;", _G.effect, _G.effect));
+    create_cue(sequence, 1, "REL", string.format("Assign Effect 1.%i.1 Thru 1.%i.3 /mode=rel;", _G.effect_index, _G.effect_index));
+    create_cue(sequence, 2, "ABS", string.format("Assign Effect 1.%i.1 Thru 1.%i.3 /mode=abs;", _G.effect_index, _G.effect_index));
 
     sequence = sequence + 1;
     create_sequence(sequence, "GOBO 1", get_executor_index(_G.executor_gobo1_index));
@@ -124,19 +134,29 @@ function create_exec_buttons()
     create_sequence(sequence, "DIR", get_executor_index(_G.executor_dir_index));
 
     sequence = sequence + 1;
-    create_sequence(sequence, "BEAM", get_executor_index(_G.executor_beam_index));
+    create_sequence(sequence, "BEAM", get_executor_index(_G.executor_beam_index), get_color_red());
+    create_cue(sequence, 1, "ON", create_cue_cmd_group_on(_G.beam_color_var, _G.beam_group_index));
+    create_cue(sequence, 2, "OFF", create_cue_cmd_group_off(_G.beam_color_var, _G.beam_group_index));
 
     sequence = sequence + 1;
-    create_sequence(sequence, "SPOT", get_executor_index(_G.executor_spot_index));
+    create_sequence(sequence, "SPOT", get_executor_index(_G.executor_spot_index), get_color_red());
+    create_cue(sequence, 1, "ON", create_cue_cmd_group_on(_G.spot_color_var, _G.spot_group_index));
+    create_cue(sequence, 2, "OFF", create_cue_cmd_group_off(_G.spot_color_var, _G.spot_group_index));
 
     sequence = sequence + 1;
-    create_sequence(sequence, "WASH 1", get_executor_index(_G.executor_wash1_index));
+    create_sequence(sequence, "WASH 1", get_executor_index(_G.executor_wash1_index), get_color_red());
+    create_cue(sequence, 1, "ON", create_cue_cmd_group_on(_G.wash1_color_var, _G.wash1_group_index));
+    create_cue(sequence, 2, "OFF", create_cue_cmd_group_off(_G.wash1_color_var, _G.wash1_group_index));
 
     sequence = sequence + 1;
-    create_sequence(sequence, "WASH 2", get_executor_index(_G.executor_wash2_index));
+    create_sequence(sequence, "WASH 2", get_executor_index(_G.executor_wash2_index), get_color_red());
+    create_cue(sequence, 1, "ON", create_cue_cmd_group_on(_G.wash2_color_var, _G.wash2_group_index));
+    create_cue(sequence, 2, "OFF", create_cue_cmd_group_off(_G.wash2_color_var, _G.wash2_group_index));
 
     sequence = sequence + 1;
-    create_sequence(sequence, "LED", get_executor_index(_G.executor_led_index));
+    create_sequence(sequence, "LED", get_executor_index(_G.executor_led_index), get_color_red());
+    create_cue(sequence, 1, "ON", create_cue_cmd_group_on(_G.led_color_var, _G.led_group_index));
+    create_cue(sequence, 2, "OFF", create_cue_cmd_group_off(_G.led_color_var, _G.led_group_index));
 
     log("Done creating color picker exec buttons");
 end
@@ -148,7 +168,8 @@ end
 --- Create/overwrite sequence
 ---@param seqIndex number The sequence index
 ---@param name string The name of the sequence
----@param executor
+---@param executor number The executor index to link the sequence to
+---@param color string The color options for the sequence
 function create_sequence(seqIndex, name, executor, color)
     log("Creating sequence " .. name .. " at index " .. seqIndex);
     gma.cmd(string.format("Store Sequence %i Cue 1 /nc", seqIndex));
@@ -176,7 +197,7 @@ function create_cue_cmd_on(effectIndex)
     local cmd = "";
     cmd = cmd .. "BlindEdit On; ";
     cmd = cmd .. "ClearSelection; ";
-    cmd = cmd .. string.format("$BEAM_COLOR%i  + $SPOT_COLOR%i  + $WASH1_COLOR%i  + $WASH2_COLOR%i; ", exec_button_page, exec_button_page, exec_button_page, exec_button_page);
+    cmd = cmd .. get_color_groups_cmd();
     cmd = cmd .. "Store Effect " .. effectIndex .. "; ";
     cmd = cmd .. "ClearAll; ";
     cmd = cmd .. "BlindEdit Off; ";
@@ -188,6 +209,32 @@ function create_cue_cmd_off(effectIndex)
     cmd = cmd .. "BlindEdit On; ";
     cmd = cmd .. "ClearSelection; ";
     cmd = cmd .. "Store Effect " .. effectIndex .. "; ";
+    cmd = cmd .. "ClearAll; ";
+    cmd = cmd .. "BlindEdit Off; ";
+    return cmd;
+end
+
+---@param varName string The variable name in the gma2 show
+---@param groupIndex number The group index to switch on
+function create_cue_cmd_group_on(varName, groupIndex)
+    local cmd = "";
+    cmd = cmd .. "BlindEdit On; ";
+    cmd = cmd .. "ClearSelection; ";
+    cmd = cmd .. string.format("SetVar $%s='Group %i'; ", varName .. exec_button_page, groupIndex);
+    cmd = cmd .. get_color_groups_cmd();
+    cmd = cmd .. string.format("Store Effect 1.%i.1 Thru 1.%i.3; ", effect_index, effect_index);
+    cmd = cmd .. "ClearAll; ";
+    cmd = cmd .. "BlindEdit Off; ";
+    return cmd;
+end
+
+function create_cue_cmd_group_off(varName)
+    local cmd = "";
+    cmd = cmd .. "BlindEdit On; ";
+    cmd = cmd .. "ClearSelection; ";
+    cmd = cmd .. string.format("SetVar $%s='Group 999'; ", varName .. exec_button_page);
+    cmd = cmd .. get_color_groups_cmd();
+    cmd = cmd .. string.format("Store Effect 1.%i.1 Thru 1.%i.3; ", effect_index, effect_index);
     cmd = cmd .. "ClearAll; ";
     cmd = cmd .. "BlindEdit Off; ";
     return cmd;
@@ -222,19 +269,38 @@ function create_gobo_cues(sequence, presetIndex)
 end
 
 function create_form_cues(sequence)
-    create_cue(sequence, 1, "CHASE", string.format("Assign Form 5 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect, _G.effect));
-    create_cue(sequence, 2, "SIN", string.format("Assign Form 8 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect, _G.effect));
-    create_cue(sequence, 3, "SWING", string.format("Assign Form 17 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect, _G.effect));
-    create_cue(sequence, 4, "RAMP", string.format("Assign Form 25.1 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect, _G.effect));
-    create_cue(sequence, 5, "FULL", string.format("Assign Form 16 At Effect %i; Assign Effect %i /phase=0 /width=100", _G.effect, _G.effect));
-    create_cue(sequence, 6, "RAINBOW", string.format("Assign Form 13 At Effect 1.%i.1; Assign Form 14 At Effect 1.%i.2;  Assign Form 15 At Effect 1.%i.3;  Assign Effect %i /phase=0..360 /width=100", _G.effect, _G.effect, _G.effect, _G.effect));
-    create_cue(sequence, 7, "C SIN MY PWM", string.format("Assign Form 8 At Effect 1.%i.1; Assign Effect 1.%i.1 /phase=0..360 /width=100; Assign Form 4 At Effect 1.%i.1 Thru 1.%i.3 - 1.%i.1; Assign Effect 1.%i.2 /phase=90 /width=50; Assign Effect 1.%i.3 /phase=-90 /width=50", _G.effect, _G.effect, _G.effect, _G.effect, _G.effect, _G.effect, _G.effect));
-    create_cue(sequence, 8, "M SIN CY PWM", string.format("Assign Form 8 At Effect 1.%i.2; Assign Effect 1.%i.2 /phase=0..360 /width=100; Assign Form 4 At Effect 1.%i.1 Thru 1.%i.3 - 1.%i.2; Assign Effect 1.%i.1 /phase=90 /width=50; Assign Effect 1.%i.3 /phase=-90 /width=50", _G.effect, _G.effect, _G.effect, _G.effect, _G.effect, _G.effect, _G.effect));
-    create_cue(sequence, 9, "Y SIN CM PWM", string.format("Assign Form 8 At Effect 1.%i.3; Assign Effect 1.%i.3 /phase=0..360 /width=100; Assign Form 4 At Effect 1.%i.1 Thru 1.%i.3 - 1.%i.3; Assign Effect 1.%i.1 /phase=90 /width=50; Assign Effect 1.%i.2 /phase=-90 /width=50", _G.effect, _G.effect, _G.effect, _G.effect, _G.effect, _G.effect, _G.effect));
+    create_cue(sequence, 1, "CHASE", string.format("Assign Form 5 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect_index, _G.effect_index));
+    create_cue(sequence, 2, "SIN", string.format("Assign Form 8 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect_index, _G.effect_index));
+    create_cue(sequence, 3, "SWING", string.format("Assign Form 17 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect_index, _G.effect_index));
+    create_cue(sequence, 4, "RAMP", string.format("Assign Form 25.1 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect_index, _G.effect_index));
+    create_cue(sequence, 5, "FULL", string.format("Assign Form 16 At Effect %i; Assign Effect %i /phase=0 /width=100", _G.effect_index, _G.effect_index));
+    create_cue(sequence, 6, "RAINBOW", string.format("Assign Form 13 At Effect 1.%i.1; Assign Form 14 At Effect 1.%i.2;  Assign Form 15 At Effect 1.%i.3;  Assign Effect %i /phase=0..360 /width=100", _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index));
+    create_cue(sequence, 7, "C SIN MY PWM", string.format("Assign Form 8 At Effect 1.%i.1; Assign Effect 1.%i.1 /phase=0..360 /width=100; Assign Form 4 At Effect 1.%i.1 Thru 1.%i.3 - 1.%i.1; Assign Effect 1.%i.2 /phase=90 /width=50; Assign Effect 1.%i.3 /phase=-90 /width=50", _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index));
+    create_cue(sequence, 8, "M SIN CY PWM", string.format("Assign Form 8 At Effect 1.%i.2; Assign Effect 1.%i.2 /phase=0..360 /width=100; Assign Form 4 At Effect 1.%i.1 Thru 1.%i.3 - 1.%i.2; Assign Effect 1.%i.1 /phase=90 /width=50; Assign Effect 1.%i.3 /phase=-90 /width=50", _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index));
+    create_cue(sequence, 9, "Y SIN CM PWM", string.format("Assign Form 8 At Effect 1.%i.3; Assign Effect 1.%i.3 /phase=0..360 /width=100; Assign Form 4 At Effect 1.%i.1 Thru 1.%i.3 - 1.%i.3; Assign Effect 1.%i.1 /phase=90 /width=50; Assign Effect 1.%i.2 /phase=-90 /width=50", _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index));
 end
 
 function get_color_blue()
     return "/b=100 /g=50 /r=50 /h=240 /s=50";
+end
+
+function get_color_red()
+    return "/b=50 /g=50 /r=100 /h=0 /s=50";
+end
+
+function get_color_groups_cmd()
+    return string.format("$%s + $%s + $%s + $%s + $%s; ",
+            beam_color_var .. exec_button_page, spot_color_var .. exec_button_page, wash1_color_var .. exec_button_page, wash2_color_var .. exec_button_page, led_color_var .. exec_button_page);
+end
+
+function initialize_vars()
+    log("Initializing vars...")
+    gma.show.setvar(beam_color_var .. exec_button_page, "Group 999");
+    gma.show.setvar(spot_color_var .. exec_button_page, "Group 999");
+    gma.show.setvar(wash1_color_var .. exec_button_page, "Group 999");
+    gma.show.setvar(wash2_color_var .. exec_button_page, "Group 999");
+    gma.show.setvar(led_color_var .. exec_button_page, "Group 999");
+    log("Initializing vars done")
 end
 
 --- Log the message to the GMA console
@@ -288,10 +354,10 @@ function main()
     log("Setting seq_start_index to " .. _G.seq_start_index);
     gma.show.setvar("seq_start_index", _G.seq_start_index);
 
-    _G.effect = get_show_var("effect");
-    _G.effect = get_number_input("Store in effect", _G.effect);
-    log("Setting effect to " .. _G.effect);
-    gma.show.setvar("effect", _G.effect);
+    _G.effect_index = get_show_var("effect");
+    _G.effect_index = get_number_input("Store in effect", _G.effect_index);
+    log("Setting effect to " .. _G.effect_index);
+    gma.show.setvar("effect", _G.effect_index);
 
     _G.effect_executor = get_show_var("effect_executor");
     _G.effect_executor = get_number_input("Assign effect to Executor", _G.effect_executor);
@@ -300,6 +366,7 @@ function main()
 
     create_color_picker_macros();
     create_exec_buttons();
+    initialize_vars();
 end
 
 function finalize()
