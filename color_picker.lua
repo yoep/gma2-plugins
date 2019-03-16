@@ -12,6 +12,9 @@ spot_group_index = 4;
 wash1_group_index = 3;
 wash2_group_index = 6;
 led_group_index = 7;
+--- Preset config
+color_preset_start_index = 100;
+gobo_preset_start_index = 100;
 --- Button Executor config
 executor_zoom_index = 106;
 executor_dim_index = 107;
@@ -97,11 +100,11 @@ function create_exec_buttons()
 
     sequence = sequence + 1;
     create_sequence(sequence, "COLOR 1", get_full_executor_index(_G.executor_color1_index), nil, true);
-    create_color_cues(sequence, 16);
+    create_color_cues(sequence, "LOW FX" .. _G.exec_button_page, _G.color_preset_start_index + (_G.exec_button_page * 2 - 2));
 
     sequence = sequence + 1;
     create_sequence(sequence, "COLOR 2", get_full_executor_index(_G.executor_color2_index), nil, true);
-    create_color_cues(sequence, 17);
+    create_color_cues(sequence, "HIGH FX" .. _G.exec_button_page, _G.color_preset_start_index + (_G.exec_button_page * 2 - 2) + 1);
 
     sequence = sequence + 1;
     create_sequence(sequence, "COLOR", get_full_executor_index(_G.executor_color_index));
@@ -110,11 +113,11 @@ function create_exec_buttons()
 
     sequence = sequence + 1;
     create_sequence(sequence, "GOBO 1", get_full_executor_index(_G.executor_gobo1_index), nil, true);
-    create_gobo_cues(sequence, 29);
+    create_gobo_cues(sequence, "LOW FX" .. _G.exec_button_page, _G.gobo_preset_start_index + (_G.exec_button_page * 2 - 2));
 
     sequence = sequence + 1
     create_sequence(sequence, "GOBO 2", get_full_executor_index(_G.executor_gobo2_index), nil, true);
-    create_gobo_cues(sequence, 30);
+    create_gobo_cues(sequence, "HIGH FX" .. _G.exec_button_page, _G.gobo_preset_start_index + (_G.exec_button_page * 2 - 2) + 1);
 
     sequence = sequence + 1;
     create_sequence(sequence, "FORM", get_full_executor_index(_G.executor_form_index), nil, true);
@@ -272,7 +275,10 @@ function create_cue_cmd_executor_off(executorIndex)
     return string.format("Off Executor %s; ", get_full_executor_index(executorIndex));
 end
 
-function create_color_cues(sequence, presetIndex)
+function create_color_cues(sequence, presetName, presetIndex)
+    gma.cmd(string.format("Store Preset 4.%i", presetIndex));
+    gma.cmd(string.format("Assign Preset 4.%i /name=\"%s\"", presetIndex, presetName));
+
     create_cue(sequence, 1, "WHITE", string.format("Copy Preset 4.1  At 4.%i /m", presetIndex))
     create_cue(sequence, 2, "RED", string.format("Copy Preset 4.2  At 4.%i /m", presetIndex))
     create_cue(sequence, 3, "ORANGE", string.format("Copy Preset 4.3  At 4.%i /m", presetIndex))
@@ -288,7 +294,10 @@ function create_color_cues(sequence, presetIndex)
     create_cue(sequence, 13, "BLACK", string.format("Copy Preset 4.13  At 4.%i /m", presetIndex))
 end
 
-function create_gobo_cues(sequence, presetIndex)
+function create_gobo_cues(sequence, presetName, presetIndex)
+    gma.cmd(string.format("Store Preset 3.%i", presetIndex));
+    gma.cmd(string.format("Assign Preset 3.%i /name=\"%s\"", presetIndex, presetName));
+
     create_cue(sequence, 1, "OPEN", string.format("Copy Preset 3.1 At 3.%i /m", presetIndex))
     create_cue(sequence, 2, "FLOWERS", string.format("Copy Preset 3.2 At 3.%i /m", presetIndex))
     create_cue(sequence, 3, "DOTS", string.format("Copy Preset 3.3 At 3.%i /m", presetIndex))
