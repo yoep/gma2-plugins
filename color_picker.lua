@@ -314,22 +314,29 @@ function create_preset_cues(sequence)
     create_cue(sequence, 2, "CHASE 3", create_cue_cmd_form(1) .. create_cue_cmd_group(2));
     create_cue(sequence, 3, "SIN 2", create_cue_cmd_form(2) .. create_cue_cmd_group(2));
     create_cue(sequence, 4, "SIN 3", create_cue_cmd_form(2) .. create_cue_cmd_group(4));
-    create_cue(sequence, 5, "RAMP 2", create_cue_cmd_form(4) .. create_cue_cmd_group(1));
-    create_cue(sequence, 6, "RAMP 3", create_cue_cmd_form(4) .. create_cue_cmd_group(2));
-    create_cue(sequence, 7, "FULL", create_cue_cmd_form(5) .. create_cue_cmd_group(1));
-    create_cue(sequence, 8, "FULL EVEN/ODD", create_cue_cmd_form(5) .. create_cue_cmd_group(5));
+    create_cue(sequence, 5, "PWN 2", create_cue_cmd_form(3) .. create_cue_cmd_group(1));
+    create_cue(sequence, 6, "PWN 3", create_cue_cmd_form(3) .. create_cue_cmd_group(2));
+    create_cue(sequence, 7, "RAMP 2", create_cue_cmd_form(4) .. create_cue_cmd_group(1));
+    create_cue(sequence, 8, "RAMP 3", create_cue_cmd_form(4) .. create_cue_cmd_group(2));
+    create_cue(sequence, 9, "STEP 2", create_cue_cmd_form(7) .. create_cue_cmd_group(1));
+    create_cue(sequence, 10, "STEP 3", create_cue_cmd_form(7) .. create_cue_cmd_group(2));
+    create_cue(sequence, 11, "FULL", create_cue_cmd_form(5) .. create_cue_cmd_group(1));
+    create_cue(sequence, 12, "FULL EVEN/ODD", create_cue_cmd_form(1) .. create_cue_cmd_group(1) .. create_cue_cmd_blocks(4));
 end
 
 function create_form_cues(sequence)
     create_cue(sequence, 1, "CHASE", string.format("Assign Form 5 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect_index, _G.effect_index));
     create_cue(sequence, 2, "SIN", string.format("Assign Form 8 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect_index, _G.effect_index));
-    create_cue(sequence, 3, "SWING", string.format("Assign Form 17 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect_index, _G.effect_index));
-    create_cue(sequence, 4, "RAMP", string.format("Assign Form 25.1 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect_index, _G.effect_index));
-    create_cue(sequence, 5, "FULL", string.format("Assign Form 16 At Effect %i; Assign Effect %i /phase=0 /width=100", _G.effect_index, _G.effect_index));
-    create_cue(sequence, 6, "RAINBOW", string.format("Assign Form 13 At Effect 1.%i.1; Assign Form 14 At Effect 1.%i.2;  Assign Form 15 At Effect 1.%i.3;  Assign Effect %i /phase=0..360 /width=100", _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index));
-    create_cue(sequence, 7, "C SIN MY PWM", string.format("Assign Form 8 At Effect 1.%i.1; Assign Effect 1.%i.1 /phase=0..360 /width=100; Assign Form 4 At Effect 1.%i.1 Thru 1.%i.3 - 1.%i.1; Assign Effect 1.%i.2 /phase=90 /width=50; Assign Effect 1.%i.3 /phase=-90 /width=50", _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index));
-    create_cue(sequence, 8, "M SIN CY PWM", string.format("Assign Form 8 At Effect 1.%i.2; Assign Effect 1.%i.2 /phase=0..360 /width=100; Assign Form 4 At Effect 1.%i.1 Thru 1.%i.3 - 1.%i.2; Assign Effect 1.%i.1 /phase=90 /width=50; Assign Effect 1.%i.3 /phase=-90 /width=50", _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index));
-    create_cue(sequence, 9, "Y SIN CM PWM", string.format("Assign Form 8 At Effect 1.%i.3; Assign Effect 1.%i.3 /phase=0..360 /width=100; Assign Form 4 At Effect 1.%i.1 Thru 1.%i.3 - 1.%i.3; Assign Effect 1.%i.1 /phase=90 /width=50; Assign Effect 1.%i.2 /phase=-90 /width=50", _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index));
+    create_cue(sequence, 3, "PWN", string.format("Assign Form 4 At Effect %i; Assign Effect %i /phase=0..360 /width=25", _G.effect_index, _G.effect_index));
+    create_cue(sequence, 4, "RAMP", string.format("Assign Form 10 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect_index, _G.effect_index));
+    create_cue(sequence, 5, "BUMP", string.format("Assign Form 16 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect_index, _G.effect_index));
+    create_cue(sequence, 6, "SWING", string.format("Assign Form 17 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect_index, _G.effect_index));
+    create_cue(sequence, 7, "STEP", string.format("Assign Form 13 At Effect %i; Assign Effect %i /phase=0..90 /width=25", _G.effect_index, _G.effect_index));
+    create_cue(sequence, 8, "FULL", string.format("Assign Form 16 At Effect %i; Assign Effect %i /phase=0 /width=100", _G.effect_index, _G.effect_index));
+    create_cue(sequence, 9, "RAINBOW", string.format("Assign Form 13 At Effect 1.%i.1; Assign Form 14 At Effect 1.%i.2;  Assign Form 15 At Effect 1.%i.3;  Assign Effect %i /phase=0..360 /width=100", _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index));
+    create_cue(sequence, 10, "C SIN MY PWM", string.format("Assign Form 8 At Effect 1.%i.1; Assign Effect 1.%i.1 /phase=0..360 /width=100; Assign Form 4 At Effect 1.%i.1 Thru 1.%i.3 - 1.%i.1; Assign Effect 1.%i.2 /phase=90 /width=50; Assign Effect 1.%i.3 /phase=-90 /width=50", _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index));
+    create_cue(sequence, 11, "M SIN CY PWM", string.format("Assign Form 8 At Effect 1.%i.2; Assign Effect 1.%i.2 /phase=0..360 /width=100; Assign Form 4 At Effect 1.%i.1 Thru 1.%i.3 - 1.%i.2; Assign Effect 1.%i.1 /phase=90 /width=50; Assign Effect 1.%i.3 /phase=-90 /width=50", _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index));
+    create_cue(sequence, 12, "Y SIN CM PWM", string.format("Assign Form 8 At Effect 1.%i.3; Assign Effect 1.%i.3 /phase=0..360 /width=100; Assign Form 4 At Effect 1.%i.1 Thru 1.%i.3 - 1.%i.3; Assign Effect 1.%i.1 /phase=90 /width=50; Assign Effect 1.%i.2 /phase=-90 /width=50", _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index, _G.effect_index));
 end
 
 function create_group_cues(sequence)
