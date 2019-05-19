@@ -51,7 +51,7 @@ function create_form_cues(sequence)
 end
 
 function create_group_cues(sequence)
-    create_cue(sequence, 0, "OFF", string.format("Assign Effect %i /groups=0 /rate=1; %s", effect_index, create_cue_cmd_executor_off(_G.executor_groups_index)));
+    create_cue(sequence, 0, "OFF", string.format("Assign Effect %i /groups=0 /rate=1; %s", effect_index, create_cue_cmd_executor_off(_G.executor_groups_index_blinders)));
     create_cue(sequence, 1, "G2", string.format("Assign Effect %i /groups=2 /rate=0.5", effect_index));
     create_cue(sequence, 2, "G3", string.format("Assign Effect %i /groups=3 /rate=0.33", effect_index));
     create_cue(sequence, 3, "G4", string.format("Assign Effect %i /groups=4 /rate=0.25", effect_index));
@@ -60,7 +60,7 @@ function create_group_cues(sequence)
 end
 
 function create_block_cues(sequence)
-    create_cue(sequence, 0, "OFF", string.format("Assign Effect %i /blocks=0; %s", effect_index, create_cue_cmd_executor_off(_G.executor_blocks_index)));
+    create_cue(sequence, 0, "OFF", string.format("Assign Effect %i /blocks=0; %s", effect_index, create_cue_cmd_executor_off(_G.executor_blocks_index_blinders)));
     create_cue(sequence, 1, "B2", string.format("Assign Effect %i /blocks=2", effect_index));
     create_cue(sequence, 2, "B3", string.format("Assign Effect %i /blocks=3", effect_index));
     create_cue(sequence, 3, "B4", string.format("Assign Effect %i /blocks=4", effect_index));
@@ -69,7 +69,7 @@ function create_block_cues(sequence)
 end
 
 function create_wing_cues(sequence)
-    create_cue(sequence, 0, "OFF", string.format("Assign Effect %i /wings=0; %s", effect_index, create_cue_cmd_executor_off(_G.executor_wings_index)));
+    create_cue(sequence, 0, "OFF", string.format("Assign Effect %i /wings=0; %s", effect_index, create_cue_cmd_executor_off(_G.executor_wings_index_blinders)));
     create_cue(sequence, 1, "W2", string.format("Assign Effect %i /wings=2", effect_index));
     create_cue(sequence, 2, "W3", string.format("Assign Effect %i /wings=3", effect_index));
     create_cue(sequence, 3, "W4", string.format("Assign Effect %i /wings=4", effect_index));
