@@ -167,51 +167,6 @@ function create_exec_buttons()
     log("Done creating color picker exec buttons");
 end
 
-function get_full_executor_index(executorIndex)
-    return _G.exec_button_page .. "." .. executorIndex;
-end
-
---- Create/overwrite sequence
----@param seqIndex number The sequence index
----@param name string The name of the sequence
----@param executor string The executor index to link the sequence to
----@param color string The color options for the sequence
----@param isGoTo boolean Is the sequence executor a GoTo button
----@param isRelease boolean Is the executor released after activation
-function create_sequence(seqIndex, name, executor, color, isGoTo, isRelease)
-    local executorOptions = "";
-
-    log("Creating sequence " .. name .. " at index " .. seqIndex);
-    gma.cmd(string.format("Store Sequence %i Cue 1 /nc", seqIndex));
-    gma.cmd(string.format("Assign Sequence %i /name=\"%s\"", seqIndex, name));
-    gma.cmd(string.format("Assign Sequence %i At Executor %s", seqIndex, executor))
-
-    if color ~= nil then
-        gma.cmd(string.format("Appearance Sequence %i %s", seqIndex, color))
-    end
-    if isRelease ~= nil then
-        executorOptions = "/cm=release";
-    end
-    if isGoTo ~= nil then
-        gma.cmd(string.format("Assign GoTo Executor %s %s", executor, executorOptions));
-    end
-end
-
----@param sequence number The sequence index to create the cue in
----@param cueIndex number The cue index in the sequence
----@param name string The name of the cue
-function create_cue(sequence, cueIndex, name, cmd)
-    local cueOptions = "";
-
-    gma.cmd(string.format("Store Sequence %i Cue %i /nc", sequence, cueIndex));
-
-    if cmd ~= nil then
-        cueOptions = string.format(" /cmd=\"%s\"", cmd);
-    end
-
-    gma.cmd(string.format('Assign Sequence %i Cue %i /name="%s" %s', sequence, cueIndex, name, cueOptions));
-end
-
 function create_cue_cmd_on(effectIndex)
     local cmd = "";
     cmd = cmd .. "BlindEdit On; ";
@@ -396,66 +351,22 @@ function initialize_vars()
     log("Initializing vars done")
 end
 
---- Log the message to the GMA console
----@param message string Set the message to log
-function log(message)
-    gma.echo("[" .. plugin_name .. "]" .. ": " .. message);
-end
-
---- Get a numeric input value from the user
----@param title string The title to display
----@param default_value string The default value to show
-function get_number_input(title, default_value)
-    local input = gma.textinput(title, default_value);
-    local number = tonumber(input);
-    return number;
-end
-
---- Get an optional var from the gma show file.
----@param name string The var name to retrieve.
-function get_show_var(name)
-    local value = gma.show.getvar(name);
-
-    if value ~= nil then
-        return value;
-    else
-        return "";
-    end
-end
-
 --- Plugin Entry Point
 function main()
     gma.cmd("ClearAll");
 
-    _G.exec_button_page = get_show_var("exec_button_page");
-    _G.exec_button_page = get_number_input("Executor page for buttons", _G.exec_button_page);
-    log("Setting exec_button_page to " .. _G.exec_button_page);
-    gma.show.setvar("exec_button_page", _G.exec_button_page);
-
-    _G.exec_color_picker_page = get_show_var(picker_page_var);
-    _G.exec_color_picker_page = get_number_input("Executor page for Color Picker", _G.exec_color_picker_page);
-    log("Setting $picker_page & exec_color_picker_page to " .. _G.exec_color_picker_page);
-    gma.show.setvar(picker_page_var, _G.exec_color_picker_page);
-
-    _G.macro_start_index = get_show_var("macro_start_index");
-    _G.macro_start_index = get_number_input("Macro start index of the Color Picker", _G.macro_start_index);
-    log("Setting macro_start_index to " .. _G.macro_start_index);
-    gma.show.setvar("macro_start_index", _G.macro_start_index);
-
-    _G.seq_start_index = get_show_var("seq_start_index");
-    _G.seq_start_index = get_number_input("Sequence start index", _G.seq_start_index);
-    log("Setting seq_start_index to " .. _G.seq_start_index);
-    gma.show.setvar("seq_start_index", _G.seq_start_index);
-
-    _G.effect_index = get_show_var("effect");
-    _G.effect_index = get_number_input("Store in effect", _G.effect_index);
-    log("Setting effect to " .. _G.effect_index);
-    gma.show.setvar("effect", _G.effect_index);
-
-    _G.effect_executor = get_show_var("effect_executor");
-    _G.effect_executor = get_number_input("Assign effect to Executor", _G.effect_executor);
-    log("Setting effect_executor to " .. _G.effect_executor);
-    gma.show.setvar("effect_executor", _G.effect_executor);
+    --- Request the executor page for the color FX buttons
+    _G.exec_button_page = show_user_var_input("exec_button_page", "Executor page for buttons");
+    --- Request the executor page for the generic color picker
+    _G.exec_color_picker_page = show_user_var_input(picker_page_var, "Executor page for Color Picker");
+    --- The start of the macro index for the color picker
+    _G.macro_start_index = show_user_var_input("macro_start_index", "Macro start index of the Color Picker");
+    --- The start of the sequence index for the color FX buttons
+    _G.seq_start_index = show_user_var_input("seq_start_index", "Sequence start index");
+    --- The effect to store the color FX button actions in
+    _G.effect_index = show_user_var_input("effect", "Store in effect");
+    --- The executor to assign the FX effect to
+    _G.effect_executor = show_user_var_input("effect_executor", "Assign effect to Executor");
 
     create_color_picker_macros();
     create_exec_buttons();
