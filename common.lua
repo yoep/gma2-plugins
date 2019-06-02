@@ -4,13 +4,15 @@
 
 --- Common vars
 plugin_name = "";
+page_index = 0;
 
 --- Functions
 
 --- Get the executor index for the page
----@param executorIndex number The index of the executor.
-function get_full_executor_index(executorIndex)
-    return _G.exec_button_page .. "." .. executorIndex;
+---@param executor_index number The button executor index.
+function get_full_executor_index(executor_index)
+    -- _G.page_index should be updated in the main function before calling this method
+    return _G.page_index .. "." .. executor_index;
 end
 
 --- Get the blue color CMD

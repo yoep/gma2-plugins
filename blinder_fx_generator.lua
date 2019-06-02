@@ -28,17 +28,12 @@ executor_dir_index_blinders = 110;
 function create_blinders_exec_buttons()
     local sequence = _G.seq_start_index_blinders;
 
-    -- check if the subgroup executor should be created
-    if (_G.group_subgroups_blinders > 1) then
-        create_sequence(sequence, "SUBGROUP", get_full_executor_index(_G.executor_subgroups_index_blinders), get_color_cyan(), true);
-        create_subgroup_cues_blinders(sequence);
+    -- create an executor for each subgroup
+    create_sequence(sequence, "SUBGROUP", get_full_executor_index(_G.executor_subgroups_index_blinders), get_color_cyan(), true);
+    create_subgroup_blinders_activation(sequence);
 
-        sequence = sequence + 1;
-    else
-        delete_executor(_G.executor_subgroups_index_blinders);
-    end
-
-    create_sequence(sequence, "PRESETS", get_full_executor_index(_G.executor_presets_index_blinders), get_color_blue(), true);
+    sequence = sequence + 1;
+    create_sequence(sequence, "PRESETS", get_full_executor_index(_G.executor_presets_index_blinders), get_color_blue(), true, true);
     create_preset_cues_blinders(sequence);
 
     sequence = sequence + 1;
@@ -62,8 +57,14 @@ function create_blinders_exec_buttons()
     create_dir_cues_blinders(sequence);
 end
 
-function create_subgroup_cues_blinders(sequence)
-    create_cue(sequence, 1, "ALL", create_blinders_subgroup_effect_selection(1, { _G.group_blinders_index }));
+function create_subgroup_blinders_activation(sequence)
+    local subgroup_index = 1;
+
+    for i = _G.group_subgroups_blinders, 1, -1 do
+        create_cue(sequence, subgroup_index, "SG" .. subgroup_index, create_effect_line_activation_blinders({ [1] = "Group 999;" }, subgroup_index));
+
+        subgroup_index = subgroup_index + 1;
+    end
 end
 
 function create_preset_cues_blinders(sequence)
@@ -156,10 +157,28 @@ function create_cue_cmd_group_blinders(cueIndex)
     return create_goto_cmd(_G.executor_groups_index_blinders, cueIndex);
 end
 
---- Create the CMD for selection the subgroup activation
----@param effect_line number The line in the effect to activate the selection on
----@param group_active_selections table The group selection to use for the effect line
-function create_blinders_subgroup_effect_selection(effect_line, group_active_selections)
+function create_effect_line_activation_blinders(effect_activation, total_active_lines)
+    local cmd = "";
+    local activation = ("");
+
+    for effect_line, groups in effect_activation do
+        activation = activation .. "ClearSelection; ";
+        activation = activation .. groups;
+        activation = activation .. string.format("Store Effect 1.%i.%i Thru 1.%i.%i; ", _G.effect_index_blinders, effect_line, _G.effect_index_blinders, effect_line);
+    end
+
+    cmd = cmd .. "BlindEdit On; ";
+    -- update the effect lines selection
+    cmd = cmd .. activation;
+    -- update the width of each line
+    cmd = cmd .. string.format("Assign Effect %i /width=\"%i\"", _G.effect_index_blinders, 100 / total_active_lines);
+    cmd = cmd .. "ClearAll; ";
+    cmd = cmd .. "BlindEdit Off; ";
+
+    return cmd;
+end
+
+function get_blinders_subgroup_selection(group_active_selections)
     local groups = "";
 
     -- convert to group selection
@@ -167,15 +186,11 @@ function create_blinders_subgroup_effect_selection(effect_line, group_active_sel
         groups = groups .. string.format(" Group %i +", group_active_selections[i])
     end
 
-    local cmd = "";
-    cmd = cmd .. "BlindEdit On; ";
-    cmd = cmd .. "ClearSelection; ";
-    -- select the fixtures to activate in the line
-    cmd = cmd .. groups;
-    cmd = cmd .. string.format("Store Effect 1.%i.%i Thru 1.%i.%i; ", _G.effect_index_blinders, effect_line, _G.effect_index_blinders, effect_line);
-    cmd = cmd .. "ClearAll; ";
-    cmd = cmd .. "BlindEdit Off; ";
-    return cmd;
+    -- remove last '+' and add ';' instead on the end
+    groups = groups:sub(1, -2);
+    groups = groups .. ";";
+
+    return groups;
 end
 
 --- Plugin Entry Point
@@ -191,6 +206,9 @@ function main()
     _G.seq_start_index_blinders = show_user_var_input_number(_G.blinder_fx_generator_sequence_var, "Sequence start index");
     -- Request effect index
     _G.effect_index_blinders = show_user_var_input_number(_G.blinder_fx_generator_effect_var, "Store in effect");
+
+    -- set the page index for the executor
+    _G.page_index = _G.exec_button_page_blinders;
 
     create_blinders_exec_buttons();
 end

@@ -52,6 +52,7 @@ function create_groups()
     create_group(group_led2_index, group_led2_name);
     -- blinders
     create_group(group_blinders_index, group_blinders_name);
+    create_subgroups(group_blinders_index + 1, group_blinders_name, group_subgroups_blinders)
     -- strobes
     create_group(group_strobes_index, group_strobes_name);
 end
@@ -62,6 +63,16 @@ end
 function create_group(index, name)
     gma.cmd(string.format("Store Group %i /nc", index));
     gma.cmd(string.format("Assign Group %i /name=\"%s\"", index, name));
+end
+
+function create_subgroups(start_index, subgroup_name, total_subgroups)
+    local index = start_index;
+
+    for i = 1, total_subgroups, 1 do
+        create_group(index, subgroup_name .. " SG " .. i)
+
+        index = index + 1;
+    end
 end
 
 --- Plugin Entry Point
