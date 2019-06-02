@@ -7,8 +7,10 @@
 --- Blinders Config
 ---
 
---- Blinders vars
-picker_page_var = "blinder_picker_page";
+--- Blinder FX generator show vars
+blinder_fx_generator_page_var = "blinder_fx_generator_page_index";
+blinder_fx_generator_sequence_var = "blinder_fx_generator_sequence_start_index";
+blinder_fx_generator_effect_var = "blinder_fx_generator_effect_index";
 
 exec_button_page_blinders = "";
 seq_start_index_blinders = "";
@@ -61,7 +63,7 @@ function create_blinders_exec_buttons()
 end
 
 function create_subgroup_cues_blinders(sequence)
-    create_cue(sequence, 1, "ALL", create_blinders_subgroup_effect_selection(1, {_G.group_blinders_index}));
+    create_cue(sequence, 1, "ALL", create_blinders_subgroup_effect_selection(1, { _G.group_blinders_index }));
 end
 
 function create_preset_cues_blinders(sequence)
@@ -181,14 +183,14 @@ function main()
     gma.cmd("ClearAll");
 
     -- Set plugin name for logging
-    _G.plugin_name = "Blinder FX Picker";
+    _G.plugin_name = "Blinder FX Generator";
 
     -- Request executor page
-    _G.exec_button_page_blinders = show_user_var_input_number("exec_button_page_blinders", "Executor page for buttons");
+    _G.exec_button_page_blinders = show_user_var_input_number(_G.blinder_fx_generator_page_var, "Executor page for buttons");
     -- Request sequence start index
-    _G.seq_start_index_blinders = show_user_var_input_number("seq_start_index_blinders", "Sequence start index");
+    _G.seq_start_index_blinders = show_user_var_input_number(_G.blinder_fx_generator_sequence_var, "Sequence start index");
     -- Request effect index
-    _G.effect_index_blinders = show_user_var_input_number("effect_blinders", "Store in effect");
+    _G.effect_index_blinders = show_user_var_input_number(_G.blinder_fx_generator_effect_var, "Store in effect");
 
     create_blinders_exec_buttons();
 end

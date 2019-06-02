@@ -42,29 +42,9 @@ shutter_effect_line_index = 8;
 --- DO NOT EDIT BELOW THIS
 --- **********************
 exec_button_page = "";
-exec_color_picker_page = "";
-macro_start_index = "";
 seq_start_index = "";
 effect_index = "";
 effect_executor = "";
-
-function create_color_picker_macros()
-    local exec_button_start = 100;
-
-    log("Creating color picker macro's...")
-    for group = 1, 7, 1 do
-        log("Creating color picker macros on line " .. _G.macro_start_index)
-        local exec_button = exec_button_start + group;
-
-        for cue = 1, 12, 1 do
-            local macro = tonumber(_G.macro_start_index) + cue;
-            gma.cmd("Assign Macro 1." .. macro .. ".1 /cmd=\"Goto Executor $picker_page." .. exec_button .. " Cue " .. cue .. "\"")
-        end
-
-        _G.macro_start_index = _G.macro_start_index + 16;
-    end
-    log("Done creating color picker macro's")
-end
 
 function create_color_exec_buttons()
     local sequence = _G.seq_start_index;
@@ -344,14 +324,10 @@ function main()
     gma.cmd("ClearAll");
 
     -- Set plugin name for logging
-    _G.plugin_name = "Color FX Picker";
+    _G.plugin_name = "Color FX Generator";
 
     -- Request the executor page for the color FX buttons
     _G.exec_button_page = show_user_var_input_number("exec_button_page", "Executor page for buttons");
-    -- Request the executor page for the generic color picker
-    _G.exec_color_picker_page = show_user_var_input_number(picker_page_var, "Executor page for Color Picker");
-    -- The start of the macro index for the color picker
-    _G.macro_start_index = show_user_var_input_number("macro_start_index", "Macro start index of the Color Picker");
     -- The start of the sequence index for the color FX buttons
     _G.seq_start_index = show_user_var_input_number("seq_start_index", "Sequence start index");
     -- The effect to store the color FX button actions in
