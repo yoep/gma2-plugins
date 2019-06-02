@@ -161,7 +161,7 @@ function create_effect_line_activation_blinders(effect_activation, total_active_
     local cmd = "";
     local activation = ("");
 
-    for effect_line, groups in effect_activation do
+    for effect_line, groups in pairs(effect_activation) do
         activation = activation .. "ClearSelection; ";
         activation = activation .. groups;
         activation = activation .. string.format("Store Effect 1.%i.%i Thru 1.%i.%i; ", _G.effect_index_blinders, effect_line, _G.effect_index_blinders, effect_line);
@@ -182,7 +182,7 @@ function get_blinders_subgroup_selection(group_active_selections)
     local groups = "";
 
     -- convert to group selection
-    for i = 0, table.getn(group_active_selections) do
+    for i = 0, table.getn(group_active_selections), 1 do
         groups = groups .. string.format(" Group %i +", group_active_selections[i])
     end
 

@@ -338,7 +338,6 @@ function main()
     -- set the page index for the executor
     _G.page_index = _G.exec_button_page;
 
-    create_color_picker_macros();
     create_color_exec_buttons();
     initialize_vars();
 end
