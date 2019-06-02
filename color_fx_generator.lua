@@ -41,7 +41,6 @@ shutter_effect_line_index = 8;
 --- **********************
 --- DO NOT EDIT BELOW THIS
 --- **********************
-plugin_name = "color_picker";
 exec_button_page = "";
 exec_color_picker_page = "";
 macro_start_index = "";
@@ -343,6 +342,9 @@ end
 --- Plugin Entry Point
 function main()
     gma.cmd("ClearAll");
+
+    -- Set plugin name for logging
+    _G.plugin_name = "Color FX Picker";
 
     -- Request the executor page for the color FX buttons
     _G.exec_button_page = show_user_var_input_number("exec_button_page", "Executor page for buttons");

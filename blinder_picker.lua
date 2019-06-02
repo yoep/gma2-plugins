@@ -7,9 +7,6 @@
 --- Blinders Config
 ---
 
---- Global vars
-plugin_name = "blinder_picker";
-
 --- Blinders vars
 picker_page_var = "blinder_picker_page";
 
@@ -18,7 +15,7 @@ seq_start_index_blinders = "";
 effect_index_blinders = "";
 
 --- Blinders button executors config
-executor_presets_index_blinders = 101;
+executor_subgroups_index_blinders = 101;
 executor_presets_index_blinders = 105;
 executor_form_index_blinders = 106;
 executor_groups_index_blinders = 107;
@@ -28,6 +25,16 @@ executor_dir_index_blinders = 110;
 
 function create_blinders_exec_buttons()
     local sequence = _G.seq_start_index_blinders;
+
+    -- check if the subgroup executor should be created
+    if (_G.group_subgroups_blinders > 1) then
+        create_sequence(sequence, "SUBGROUP", get_full_executor_index(_G.executor_subgroups_index_blinders), get_color_cyan(), true);
+        create_subgroup_cues_blinders(sequence);
+
+        sequence = sequence + 1;
+    else
+        delete_executor(_G.executor_subgroups_index_blinders);
+    end
 
     create_sequence(sequence, "PRESETS", get_full_executor_index(_G.executor_presets_index_blinders), get_color_blue(), true);
     create_preset_cues_blinders(sequence);
@@ -51,6 +58,10 @@ function create_blinders_exec_buttons()
     sequence = sequence + 1;
     create_sequence(sequence, "DIR", get_full_executor_index(_G.executor_dir_index_blinders), nil, true);
     create_dir_cues_blinders(sequence);
+end
+
+function create_subgroup_cues_blinders(sequence)
+    create_cue(sequence, 1, "ALL", create_blinders_subgroup_effect_selection(1, {_G.group_blinders_index}));
 end
 
 function create_preset_cues_blinders(sequence)
@@ -143,9 +154,34 @@ function create_cue_cmd_group_blinders(cueIndex)
     return create_goto_cmd(_G.executor_groups_index_blinders, cueIndex);
 end
 
+--- Create the CMD for selection the subgroup activation
+---@param effect_line number The line in the effect to activate the selection on
+---@param group_active_selections table The group selection to use for the effect line
+function create_blinders_subgroup_effect_selection(effect_line, group_active_selections)
+    local groups = "";
+
+    -- convert to group selection
+    for i = 0, table.getn(group_active_selections) do
+        groups = groups .. string.format(" Group %i +", group_active_selections[i])
+    end
+
+    local cmd = "";
+    cmd = cmd .. "BlindEdit On; ";
+    cmd = cmd .. "ClearSelection; ";
+    -- select the fixtures to activate in the line
+    cmd = cmd .. groups;
+    cmd = cmd .. string.format("Store Effect 1.%i.%i Thru 1.%i.%i; ", _G.effect_index_blinders, effect_line, _G.effect_index_blinders, effect_line);
+    cmd = cmd .. "ClearAll; ";
+    cmd = cmd .. "BlindEdit Off; ";
+    return cmd;
+end
+
 --- Plugin Entry Point
 function main()
     gma.cmd("ClearAll");
+
+    -- Set plugin name for logging
+    _G.plugin_name = "Blinder FX Picker";
 
     -- Request executor page
     _G.exec_button_page_blinders = show_user_var_input_number("exec_button_page_blinders", "Executor page for buttons");

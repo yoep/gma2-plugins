@@ -2,6 +2,11 @@
 --- Common Functionality Library
 ---
 
+--- Common vars
+plugin_name = "";
+
+--- Functions
+
 --- Get the executor index for the page
 ---@param executorIndex number The index of the executor.
 function get_full_executor_index(executorIndex)
@@ -34,7 +39,7 @@ function create_sequence(seqIndex, name, executor, color, isGoTo, isRelease)
     local executorOptions = "";
 
     log("Creating sequence " .. name .. " at index " .. seqIndex);
-    gma.cmd(string.format("Delete Sequence %i /nc", seqIndex));
+
     gma.cmd(string.format("Store Sequence %i Cue 1 /nc", seqIndex));
     gma.cmd(string.format("Assign Sequence %i /name=\"%s\"", seqIndex, name));
     gma.cmd(string.format("Assign Sequence %i At Executor %s", seqIndex, executor))
@@ -48,6 +53,28 @@ function create_sequence(seqIndex, name, executor, color, isGoTo, isRelease)
     if isGoTo ~= nil then
         gma.cmd(string.format("Assign GoTo Executor %s %s", executor, executorOptions));
     end
+end
+
+--- Delete an existing executor
+---@param executorIndex number The executor index to remove
+function delete_executor(executorIndex)
+    log(string.format("Deleting executor at index %i", executorIndex));
+    gma.cmd(string.format("Delete Executor %i /nc", executorIndex));
+end
+
+--- Delete an existing sequence
+---@param sequenceIndex number The sequence index to remove
+function delete_sequence(sequenceIndex)
+    log(string.format("Deleting sequence at index %i", sequenceIndex));
+    gma.cmd(string.format("Delete Sequence %i /nc", sequenceIndex));
+end
+
+--- Delete the existing executor with its sequence
+---@param executorIndex number The executor index to remove
+---@param sequenceIndex number The sequence index to remove
+function delete_executor_and_sequence(executorIndex, sequenceIndex)
+    delete_executor(executorIndex);
+    delete_sequence(sequenceIndex);
 end
 
 ---@param sequence number The sequence index to create the cue in
@@ -78,7 +105,7 @@ end
 --- Log the message to the GMA console
 ---@param message string Set the message to log
 function log(message)
-    gma.echo("[" .. plugin_name .. "]" .. ": " .. message);
+    gma.echo("[" .. _G.plugin_name .. "]" .. ": " .. message);
 end
 
 --- Get the input value from the user

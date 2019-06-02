@@ -7,9 +7,6 @@
 --- Groups Config
 ---
 
---- Global vars
-plugin_name = "groups";
-
 --- Group indexes
 group_all_index = 10;
 group_beams_index = 20;
@@ -38,17 +35,44 @@ group_subgroups_blinders = 1;
 --- Group vars
 group_vars_blinders_subgroups = "group_vars_blinders_subgroups";
 
-
 function create_groups()
+    -- all
+    create_group(group_all_index, group_all_name);
+    -- beams
+    create_group(group_beams_index, group_beams_name);
+    -- spot
+    create_group(group_spots_index, group_spots_name);
+    -- wash1
+    create_group(group_wash1_index, group_wash1_name);
+    -- wash2
+    create_group(group_wash2_index, group_wash2_name);
+    -- led1
+    create_group(group_led1_index, group_led1_name);
+    -- led2
+    create_group(group_led2_index, group_led2_name);
+    -- blinders
+    create_group(group_blinders_index, group_blinders_name);
+    -- strobes
+    create_group(group_strobes_index, group_strobes_name);
+end
 
+--- Create a group at given index
+---@param index number The group index
+---@param name string The name of the group
+function create_group(index, name)
+    gma.cmd(string.format("Store Group %i /nc", index));
+    gma.cmd(string.format("Assign Group %i /name=\"%s\"", index, name));
 end
 
 --- Plugin Entry Point
 function main()
     gma.cmd("ClearAll");
 
+    -- Set plugin name for logging
+    _G.plugin_name = "Groups";
+
     --- Request the subgroups of the blinders
-    _G.group_subgroups_blinders = show_user_var_input(_G.group_vars_blinders_subgroups, string.format("Total %s subgroups", _G.group_name_blinders));
+    _G.group_subgroups_blinders = show_user_var_input(_G.group_vars_blinders_subgroups, string.format("Total %s subgroups", _G.group_blinders_name));
 
     create_groups();
 end
