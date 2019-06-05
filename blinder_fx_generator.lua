@@ -54,7 +54,7 @@ function create_blinders_exec_buttons()
 
     sequence = sequence + 1;
     create_sequence(sequence, "DIR", get_full_executor_index(_G.executor_dir_index_blinders), nil, true);
-    create_dir_cues_blinders(sequence);
+    create_dir_cues(sequence, _G.effect_index_blinders);
 end
 
 function create_subgroup_blinders_activation(sequence)
@@ -138,17 +138,6 @@ function create_wing_cues_blinders(sequence)
             string.format("Assign Effect %i /wings=8", _G.effect_index_blinders));
 end
 
-function create_dir_cues_blinders(sequence)
-    create_cue(sequence, 1, "<",
-            string.format("Assign Effect %i /dir=<", _G.effect_index_blinders));
-    create_cue(sequence, 2, ">",
-            string.format("Assign Effect %i /dir=>", _G.effect_index_blinders));
-    create_cue(sequence, 3, "< BOUNCE",
-            string.format("Assign Effect %i /dir=<bounce", _G.effect_index_blinders));
-    create_cue(sequence, 4, "> BOUNCE",
-            string.format("Assign Effect %i /dir=>bounce", _G.effect_index_blinders));
-end
-
 function create_cue_cmd_form_blinders(cueIndex)
     return create_goto_cmd(_G.executor_form_index_blinders, cueIndex);
 end
@@ -207,7 +196,7 @@ function main()
     -- Request effect index
     _G.effect_index_blinders = show_user_var_input_number(_G.blinder_fx_generator_effect_var, "Store in effect");
 
-    -- set the page index for the executor
+    -- set the page index for the executors
     _G.page_index = _G.exec_button_page_blinders;
 
     create_blinders_exec_buttons();

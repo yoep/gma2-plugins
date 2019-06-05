@@ -15,6 +15,11 @@ function get_full_executor_index(executor_index)
     return _G.page_index .. "." .. executor_index;
 end
 
+--- Get the effect line index
+function get_multi_line_effect_index(effect_index, start_index, end_index)
+    return string.format("1.%i.%i Thru 1.%i.%i", effect_index, start_index, effect_index, end_index);
+end
+
 --- Get the blue color CMD
 function get_color_blue()
     return "/b=100 /g=50 /r=50 /h=240 /s=50";
@@ -102,6 +107,72 @@ function create_goto_cmd(executor, cueIndex)
     local fullExecutorIndex = get_full_executor_index(executor);
 
     return string.format("GoTo Executor %s Cue %i; ", fullExecutorIndex, cueIndex);
+end
+
+--- Create the CMD to enable/activate a certain group in an effect.
+---@param effect_index number The effect index to enable/activate the group in.
+---@param start_index number The start effect line to enable the group in.
+---@param end_index number The end effect line to enable the group in
+---@param var_name string The variable name in the gma2 show to modify the selection of.
+---@param group_index number The group index to enable/activate in the varName.
+function create_cue_cmd_group_on(effect_index, start_index, end_index, var_name, group_index, group_cmd)
+    local cmd = "";
+    cmd = cmd .. "BlindEdit On; ";
+    cmd = cmd .. "ClearSelection; ";
+    cmd = cmd .. string.format("SetVar $%s='Group %i'; ", var_name .. _G.page_index, group_index);
+    cmd = cmd .. group_cmd .. "; ";
+    cmd = cmd .. string.format("Store Effect %s; ", get_multi_line_effect_index(effect_index, start_index, end_index));
+    cmd = cmd .. "ClearAll; ";
+    cmd = cmd .. "BlindEdit Off; ";
+    return cmd;
+end
+
+--- Create the CMD to disable a certain group in an effect.
+---@param effect_index number The effect index to disable the group in.
+---@param start_index number The start effect line to disable the group in.
+---@param end_index number The end effect line to disable the group in
+---@param var_name string The variable name in the gma2 show to modify the selection of.
+function create_cue_cmd_group_off(effect_index, start_index, end_index, varName, group_cmd)
+    local cmd = "";
+    cmd = cmd .. "BlindEdit On; ";
+    cmd = cmd .. "ClearSelection; ";
+    cmd = cmd .. string.format("SetVar $%s='Group 999'; ", varName .. _G.page_index);
+    cmd = cmd .. group_cmd .. "; ";
+    cmd = cmd .. string.format("Store Effect %s; ", get_multi_line_effect_index(effect_index, start_index, end_index));
+    cmd = cmd .. "ClearAll; ";
+    cmd = cmd .. "BlindEdit Off; ";
+    return cmd;
+end
+
+function create_cue_cmd_on(effectIndex, groups_cmd)
+    local cmd = "";
+    cmd = cmd .. "BlindEdit On; ";
+    cmd = cmd .. "ClearSelection; ";
+    cmd = cmd .. groups_cmd .. "; ";
+    cmd = cmd .. "Store Effect " .. effectIndex .. "; ";
+    cmd = cmd .. "ClearAll; ";
+    cmd = cmd .. "BlindEdit Off; ";
+    return cmd;
+end
+
+function create_cue_cmd_off(effectIndex)
+    local cmd = "";
+    cmd = cmd .. "BlindEdit On; ";
+    cmd = cmd .. "ClearSelection; ";
+    cmd = cmd .. "Store Effect " .. effectIndex .. "; ";
+    cmd = cmd .. "ClearAll; ";
+    cmd = cmd .. "BlindEdit Off; ";
+    return cmd;
+end
+
+--- Create the direction cues for the given sequence and effect
+---@param sequence number The sequence index to assign the cue to.
+---@param effect_index number The effect index to modify the direction of.
+function create_dir_cues(sequence, effect_index)
+    create_cue(sequence, 1, "<", string.format("Assign Effect %i /dir=<", effect_index));
+    create_cue(sequence, 2, ">", string.format("Assign Effect %i /dir=>", effect_index));
+    create_cue(sequence, 3, "< BOUNCE", string.format("Assign Effect %i /dir=<bounce", effect_index));
+    create_cue(sequence, 4, "> BOUNCE", string.format("Assign Effect %i /dir=>bounce", effect_index));
 end
 
 --- Log the message to the GMA console
