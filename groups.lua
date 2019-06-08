@@ -35,6 +35,20 @@ group_subgroups_blinders = 1;
 --- Group vars
 group_vars_blinders_subgroups = "group_vars_blinders_subgroups";
 
+---
+--- GETTERS
+---
+
+--- Get the total subgroups of the blinders
+---@return number Returns the number of subgroups for the blinders.
+function get_subgroups_blinders()
+    return tonumber(get_show_var(group_vars_blinders_subgroups));
+end
+
+---
+--- GROUP CREATION FUNCTIONS
+---
+
 function create_groups()
     -- all
     create_group(group_all_index, group_all_name);

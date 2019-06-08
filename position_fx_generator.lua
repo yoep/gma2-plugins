@@ -178,11 +178,11 @@ end
 
 function create_preset_cues_position(sequence)
     create_cue(sequence, 1, "FULL UP",
-            create_cue_cmd_phase_position(0) .. create_cue_cmd_form_pan_position(0) .. create_cue_cmd_form_tilt_position(1) .. create_cue_cmd_color_fx_position(1) .. create_cue_cmd_group_position(1));
-    create_cue(sequence, 2, "EVEN/ODD UP",
             create_cue_cmd_phase_position(1) .. create_cue_cmd_form_pan_position(0) .. create_cue_cmd_form_tilt_position(1) .. create_cue_cmd_color_fx_position(1) .. create_cue_cmd_group_position(1));
+    create_cue(sequence, 2, "EVEN/ODD UP",
+            create_cue_cmd_phase_position(2) .. create_cue_cmd_form_pan_position(0) .. create_cue_cmd_form_tilt_position(1) .. create_cue_cmd_color_fx_position(1) .. create_cue_cmd_group_position(1));
     create_cue(sequence, 3, "3 UP",
-            create_cue_cmd_phase_position(1) .. create_cue_cmd_form_pan_position(0) .. create_cue_cmd_form_tilt_position(1) .. create_cue_cmd_color_fx_position(1) .. create_cue_cmd_group_position(2));
+            create_cue_cmd_phase_position(2) .. create_cue_cmd_form_pan_position(0) .. create_cue_cmd_form_tilt_position(1) .. create_cue_cmd_color_fx_position(1) .. create_cue_cmd_group_position(2));
     create_cue(sequence, 4, "TILT",
             create_cue_cmd_phase_position(3) .. create_cue_cmd_form_pan_position(0) .. create_cue_cmd_form_tilt_position(1) .. create_cue_cmd_color_fx_position(0));
     create_cue(sequence, 5, "PAN",

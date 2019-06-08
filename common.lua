@@ -6,7 +6,9 @@
 plugin_name = "";
 page_index = 0;
 
---- Functions
+---
+--- GETTERS
+---
 
 --- Get the executor index for the page
 ---@param executor_index number The button executor index.
@@ -34,6 +36,10 @@ end
 function get_color_cyan()
     return "/b=100 /g=100 /r=0 /h=0 /s=50";
 end
+
+---
+--- SEQUENCE AND CUE FUNCTIONS
+---
 
 --- Create/overwrite sequence
 ---@param seqIndex number The sequence index
@@ -98,6 +104,10 @@ function create_cue(sequence, cueIndex, name, cmd)
 
     gma.cmd(string.format('Assign Sequence %i Cue %i /name="%s" %s', sequence, cueIndex, name, cueOptions));
 end
+
+---
+--- CMD CREATION FUNCTIONS
+---
 
 --- Create GoTo Executor Cue CMD
 ---@param executor number The executor number.
@@ -165,6 +175,31 @@ function create_cue_cmd_off(effectIndex)
     return cmd;
 end
 
+--- Create the cmd to modify the effect phase
+---@param effect_index number The effect index to modify the phase of.
+---@param phase string The phase that should be applied to the effect.
+---@param width number The width of the effect.
+function create_cmd_phase(effect_index, phase, width)
+    if width == nil then
+        width = 100;
+    end
+
+    return string.format("Assign Effect %i /phase=%s /width=%i; ", effect_index, phase, width);
+end
+
+--- Create the cmd to modify the effect phase
+---@param effect_index number The effect index to modify the phase of.
+---@param effect_line number The effect line index to modify the phase of.
+---@param phase string The phase that should be applied to the effect.
+---@param width number The width of the effect line.
+function create_cmd_phase_effect_line(effect_index, phase, effect_line, width)
+    if width == nil then
+        width = 100;
+    end
+
+    return string.format("Assign Effect 1.%i.%i /phase=%s /width=%i; ", effect_index, effect_line, phase, width);
+end
+
 --- Create the direction cues for the given sequence and effect
 ---@param sequence number The sequence index to assign the cue to.
 ---@param effect_index number The effect index to modify the direction of.
@@ -174,6 +209,10 @@ function create_dir_cues(sequence, effect_index)
     create_cue(sequence, 3, "< BOUNCE", string.format("Assign Effect %i /dir=<bounce", effect_index));
     create_cue(sequence, 4, "> BOUNCE", string.format("Assign Effect %i /dir=>bounce", effect_index));
 end
+
+---
+--- GENERIC FUNCTIONS
+---
 
 --- Log the message to the GMA console
 ---@param message string Set the message to log

@@ -17,7 +17,6 @@ seq_start_index_blinders = "";
 effect_index_blinders = "";
 
 --- Blinders button executors config
-executor_subgroups_index_blinders = 101;
 executor_presets_index_blinders = 105;
 executor_form_index_blinders = 106;
 executor_groups_index_blinders = 107;
@@ -28,11 +27,6 @@ executor_dir_index_blinders = 110;
 function create_blinders_exec_buttons()
     local sequence = _G.seq_start_index_blinders;
 
-    -- create an executor for each subgroup
-    create_sequence(sequence, "SUBGROUP", get_full_executor_index(_G.executor_subgroups_index_blinders), get_color_cyan(), true);
-    create_subgroup_blinders_activation(sequence);
-
-    sequence = sequence + 1;
     create_sequence(sequence, "PRESETS", get_full_executor_index(_G.executor_presets_index_blinders), get_color_blue(), true, true);
     create_preset_cues_blinders(sequence);
 
@@ -57,40 +51,42 @@ function create_blinders_exec_buttons()
     create_dir_cues(sequence, _G.effect_index_blinders);
 end
 
-function create_subgroup_blinders_activation(sequence)
-    local subgroup_index = 1;
-
-    for i = _G.group_subgroups_blinders, 1, -1 do
-        create_cue(sequence, subgroup_index, "SG" .. subgroup_index, create_effect_line_activation_blinders({ [1] = "Group 999;" }, subgroup_index));
-
-        subgroup_index = subgroup_index + 1;
-    end
-end
-
 function create_preset_cues_blinders(sequence)
-    create_cue(sequence, 1, "CHASE 2", create_cue_cmd_form_blinders(1) .. create_cue_cmd_group_blinders(1));
-    create_cue(sequence, 2, "CHASE 3", create_cue_cmd_form_blinders(1) .. create_cue_cmd_group_blinders(2));
-    create_cue(sequence, 3, "SIN 2", create_cue_cmd_form_blinders(2) .. create_cue_cmd_group_blinders(1));
-    create_cue(sequence, 4, "SIN 3", create_cue_cmd_form_blinders(2) .. create_cue_cmd_group_blinders(2));
+    create_cue(sequence, 1, "CHASE 2",
+            create_cue_cmd_form_blinders(1) .. create_cue_cmd_group_blinders(1) .. create_cmd_phase(_G.effect_index_blinders, "0..360"));
+    create_cue(sequence, 2, "CHASE 3",
+            create_cue_cmd_form_blinders(1) .. create_cue_cmd_group_blinders(2) .. create_cmd_phase(_G.effect_index_blinders, "0..360"));
+    create_cue(sequence, 3, "CHASE 4",
+            create_cue_cmd_form_blinders(1) .. create_cue_cmd_group_blinders(3) .. create_cmd_phase(_G.effect_index_blinders, "0..360"));
+    create_cue(sequence, 4, "SIN 2",
+            create_cue_cmd_form_blinders(2) .. create_cue_cmd_group_blinders(1) .. create_cmd_phase(_G.effect_index_blinders, "0..360"));
+    create_cue(sequence, 5, "SIN 3",
+            create_cue_cmd_form_blinders(2) .. create_cue_cmd_group_blinders(2) .. create_cmd_phase(_G.effect_index_blinders, "0..360"));
+    create_cue(sequence, 6, "SIN 4",
+            create_cue_cmd_form_blinders(2) .. create_cue_cmd_group_blinders(3) .. create_cmd_phase(_G.effect_index_blinders, "0..360"));
+    create_cue(sequence, 7, "ROW",
+            create_cue_cmd_form_blinders(2) .. create_cue_cmd_group_blinders(get_subgroups_blinders() - 1) .. create_row_cmd_blinders());
+    create_cue(sequence, 8, "UP/DOWN",
+            create_cue_cmd_form_blinders(2) .. create_cue_cmd_group_blinders(1) .. create_up_down_cmd_blinders());
+    create_cue(sequence, 9, "ALL",
+            create_cue_cmd_form_blinders(5) .. create_cue_cmd_group_blinders(1) .. create_cmd_phase(_G.effect_index_blinders, "0"));
 end
 
 function create_form_cues_blinders(sequence)
     create_cue(sequence, 1, "CHASE",
-            string.format("Assign Form 5 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect_index_blinders, _G.effect_index_blinders));
+            string.format("Assign Form 5 At Effect %i;", _G.effect_index_blinders, _G.effect_index_blinders));
     create_cue(sequence, 2, "SIN",
-            string.format("Assign Form 8 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect_index_blinders, _G.effect_index_blinders));
+            string.format("Assign Form 8 At Effect %i;", _G.effect_index_blinders, _G.effect_index_blinders));
     create_cue(sequence, 3, "PWN",
-            string.format("Assign Form 4 At Effect %i; Assign Effect %i /phase=0..360 /width=25", _G.effect_index_blinders, _G.effect_index_blinders));
+            string.format("Assign Form 4 At Effect %i;", _G.effect_index_blinders, _G.effect_index_blinders));
     create_cue(sequence, 4, "RAMP",
-            string.format("Assign Form 10 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect_index_blinders, _G.effect_index_blinders));
+            string.format("Assign Form 10 At Effect %i;", _G.effect_index_blinders, _G.effect_index_blinders));
     create_cue(sequence, 5, "BUMP",
-            string.format("Assign Form 16 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect_index_blinders, _G.effect_index_blinders));
+            string.format("Assign Form 16 At Effect %i;", _G.effect_index_blinders, _G.effect_index_blinders));
     create_cue(sequence, 6, "SWING",
-            string.format("Assign Form 17 At Effect %i; Assign Effect %i /phase=0..360 /width=100", _G.effect_index_blinders, _G.effect_index_blinders));
+            string.format("Assign Form 17 At Effect %i;", _G.effect_index_blinders, _G.effect_index_blinders));
     create_cue(sequence, 7, "STEP",
-            string.format("Assign Form 13 At Effect %i; Assign Effect %i /phase=0..90 /width=25", _G.effect_index_blinders, _G.effect_index_blinders));
-    create_cue(sequence, 8, "FULL",
-            string.format("Assign Form 16 At Effect %i; Assign Effect %i /phase=0 /width=100", _G.effect_index_blinders, _G.effect_index_blinders));
+            string.format("Assign Form 13 At Effect %i;", _G.effect_index_blinders, _G.effect_index_blinders));
 end
 
 function create_group_cues_blinders(sequence)
@@ -146,40 +142,28 @@ function create_cue_cmd_group_blinders(cueIndex)
     return create_goto_cmd(_G.executor_groups_index_blinders, cueIndex);
 end
 
-function create_effect_line_activation_blinders(effect_activation, total_active_lines)
+function create_row_cmd_blinders()
     local cmd = "";
-    local activation = ("");
+    local last_phase = 0;
 
-    for effect_line, groups in pairs(effect_activation) do
-        activation = activation .. "ClearSelection; ";
-        activation = activation .. groups;
-        activation = activation .. string.format("Store Effect 1.%i.%i Thru 1.%i.%i; ", _G.effect_index_blinders, effect_line, _G.effect_index_blinders, effect_line);
+    for i = 1, get_subgroups_blinders(), 1 do
+        cmd = cmd .. create_cmd_phase_effect_line(_G.effect_index_blinders, last_phase, i);
+        last_phase = last_phase + 90;
     end
-
-    cmd = cmd .. "BlindEdit On; ";
-    -- update the effect lines selection
-    cmd = cmd .. activation;
-    -- update the width of each line
-    cmd = cmd .. string.format("Assign Effect %i /width=\"%i\"", _G.effect_index_blinders, 100 / total_active_lines);
-    cmd = cmd .. "ClearAll; ";
-    cmd = cmd .. "BlindEdit Off; ";
 
     return cmd;
 end
 
-function get_blinders_subgroup_selection(group_active_selections)
-    local groups = "";
+function create_up_down_cmd_blinders()
+    local cmd = "";
 
-    -- convert to group selection
-    for i = 0, table.getn(group_active_selections), 1 do
-        groups = groups .. string.format(" Group %i +", group_active_selections[i])
+    cmd = cmd .. create_cmd_phase_effect_line(_G.effect_index_blinders, 0, 1);
+
+    for i = 2, get_subgroups_blinders(), 1 do
+        cmd = cmd .. create_cmd_phase_effect_line(_G.effect_index_blinders, 180, i);
     end
 
-    -- remove last '+' and add ';' instead on the end
-    groups = groups:sub(1, -2);
-    groups = groups .. ";";
-
-    return groups;
+    return cmd;
 end
 
 --- Plugin Entry Point
