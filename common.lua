@@ -37,6 +37,11 @@ function get_color_cyan()
     return "/b=100 /g=100 /r=0 /h=0 /s=50";
 end
 
+--- Get the green color CMD
+function get_color_green()
+    return "/b=0 /g=100 /r=0 /h=0 /s=50";
+end
+
 ---
 --- SEQUENCE AND CUE FUNCTIONS
 ---
@@ -208,6 +213,16 @@ function create_dir_cues(sequence, effect_index)
     create_cue(sequence, 2, ">", string.format("Assign Effect %i /dir=>", effect_index));
     create_cue(sequence, 3, "< BOUNCE", string.format("Assign Effect %i /dir=<bounce", effect_index));
     create_cue(sequence, 4, "> BOUNCE", string.format("Assign Effect %i /dir=>bounce", effect_index));
+end
+
+---
+--- MACRO FUNCTIONS
+---
+
+--- Delete the given macro
+---@param macro_index number The macro index to delete.
+function delete_macro(macro_index)
+    gma.cmd(string.format("Delete Macro %i", macro_index));
 end
 
 ---

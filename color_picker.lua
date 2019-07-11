@@ -15,18 +15,19 @@ color_picker_sequence_start_index = "";
 
 function create_color_picker_macros()
     local exec_button_start = 100;
+    local macro_index = _G.color_picker_macro_start_index;
 
     log("Creating color picker macro's...")
     for group = 1, 7, 1 do
-        log("Creating color picker macros on line " .. _G.color_picker_macro_start_index)
+        log("Creating color picker macros on line " .. macro_index)
         local exec_button = exec_button_start + group;
 
         for cue = 1, 12, 1 do
-            local macro = tonumber(_G.color_picker_macro_start_index) + cue;
+            local macro = tonumber(macro_index) + cue;
             gma.cmd(string.format("Assign Macro 1.%i.1 /cmd=\"Goto Executor %s Cue %i\"", macro, get_color_picker_executor(exec_button), cue));
         end
 
-        _G.color_picker_macro_start_index = _G.color_picker_macro_start_index + 16;
+        macro_index = macro_index + 16;
     end
     log("Done creating color picker macro's")
 end
@@ -74,13 +75,22 @@ function create_color_picker_fade_macro(macro_index, fade_time)
     local fade_macro_start_index = get_color_picker_fade_macro_start_index();
     local fade_macro_end_index = fade_macro_start_index + 6;
 
-    gma.cmd(string.format("Store Macro %i /m /nc /name=\"Fade %ss\"", macro_index, fade_time));
-    gma.cmd(string.format("Assign Macro 1.%i.1 /cmd=\"Off Macro %i Thru %i - %i\"",
-            macro_index, fade_macro_start_index, fade_macro_end_index, macro_index));
-    gma.cmd(string.format("Assign Macro 1.%i.2 /cmd=\"Assign Sequence %i Thru %i /fade = %s\"",
+    log("Creating fade macro at index " .. macro_index);
+
+    -- delete existing macro
+    delete_macro(macro_index);
+    -- create macro and assign name
+    gma.cmd(string.format("Store Macro %i /o /nc", macro_index));
+    gma.cmd(string.format("Assign Macro %i /name=\"Fade %ss\"", macro_index, fade_time));
+    -- create macro lines
+    gma.cmd(string.format("Store Macro 1.%i.1 Thru 1.%i.3", macro_index, macro_index));
+    -- assign cmd commands to macro lines
+    gma.cmd(string.format("Assign Macro 1.%i.1 /cmd=\"Assign Sequence %i Thru %i Cue 1 Thru 12 /fade = %s\"",
             macro_index, _G.color_picker_sequence_start_index, _G.color_picker_sequence_start_index + 7, fade_time));
-    gma.cmd(string.format("Assign Macro 1.%i.3 /cmd=\"Top Macro %i\"",
-            macro_index, macro_index));
+    gma.cmd(string.format("Assign Macro 1.%i.2 /cmd=\"Appearance Macro %i Thru %i - %i %s\"",
+            macro_index, fade_macro_start_index, fade_macro_end_index, macro_index, get_color_green()));
+    gma.cmd(string.format("Assign Macro 1.%i.3 /cmd=\"Appearance Macro %i %s\"",
+            macro_index, macro_index, get_color_red()));
 end
 
 --- Plugin Entry Point
