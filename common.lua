@@ -39,7 +39,11 @@ end
 
 --- Get the green color CMD
 function get_color_green()
-    return "/b=0 /g=100 /r=0 /h=0 /s=50";
+    return "/b=0 /g=100 /r=0 /h=100 /s=50";
+end
+
+function get_color_gray()
+    return "/b=50 /g=50 /r=50 /h=0 /s=10";
 end
 
 ---
