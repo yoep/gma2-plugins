@@ -64,11 +64,11 @@ function create_position_exec_buttons()
     create_form_tilt_cues_position(sequence);
 
     sequence = sequence + 1;
-    create_sequence(sequence, "VAL PAN", get_full_executor_index(_G.executor_val_pan_index_position));
+    create_sequence(sequence, "VAL PAN", get_full_executor_index(_G.executor_val_pan_index_position), nil, true);
     create_val_cues_position(sequence, _G.pan_index_position);
 
     sequence = sequence + 1;
-    create_sequence(sequence, "VAL TILT", get_full_executor_index(_G.executor_val_tilt_index_position));
+    create_sequence(sequence, "VAL TILT", get_full_executor_index(_G.executor_val_tilt_index_position), nil, true);
     create_val_cues_position(sequence, _G.tilt_index_position);
 
     sequence = sequence + 1;
@@ -172,8 +172,12 @@ function create_form_tilt_cues_position(sequence)
 end
 
 function create_val_cues_position(sequence, line_index)
-    create_cue(sequence, 1, "00..75", string.format("Assign Effect 1.%i.%i /lowvalue=0 /highvalue=75", _G.effect_index_position, line_index));
-    create_cue(sequence, 2, "-75..75", string.format("Assign Effect 1.%i.%i /lowvalue=-75 /highvalue=75", _G.effect_index_position, line_index));
+    create_cue(sequence, 1, "00..25", string.format("Assign Effect 1.%i.%i /lowvalue=0 /highvalue=25", _G.effect_index_position, line_index));
+    create_cue(sequence, 2, "00..50", string.format("Assign Effect 1.%i.%i /lowvalue=0 /highvalue=50", _G.effect_index_position, line_index));
+    create_cue(sequence, 3, "00..75", string.format("Assign Effect 1.%i.%i /lowvalue=0 /highvalue=75", _G.effect_index_position, line_index));
+    create_cue(sequence, 4, "-25..25", string.format("Assign Effect 1.%i.%i /lowvalue=-25 /highvalue=25", _G.effect_index_position, line_index));
+    create_cue(sequence, 5, "-50..50", string.format("Assign Effect 1.%i.%i /lowvalue=-50 /highvalue=50", _G.effect_index_position, line_index));
+    create_cue(sequence, 6, "-75..75", string.format("Assign Effect 1.%i.%i /lowvalue=-75 /highvalue=75", _G.effect_index_position, line_index));
 end
 
 function create_preset_cues_position(sequence)
@@ -193,6 +197,8 @@ function create_preset_cues_position(sequence)
             create_cue_cmd_phase_position(2) .. create_cue_cmd_form_pan_position(1) .. create_cue_cmd_form_tilt_position(2) .. create_cue_cmd_color_fx_position(1) .. create_color_form_cmd_position(12));
     create_cue(sequence, 8, "FLY OUT",
             create_cue_cmd_phase_position(2) .. create_cue_cmd_form_pan_position(0) .. create_cue_cmd_form_tilt_position(9) .. create_cue_cmd_color_fx_position(1) .. create_color_form_cmd_position(21.1));
+    create_cue(sequence, 9, "CIRCLE",
+            create_cue_cmd_phase_position(2) .. create_cue_cmd_form_pan_position(6) .. create_cue_cmd_form_tilt_position(6) .. create_cue_cmd_color_fx_position(0));
 end
 
 function create_color_form_cmd_position(form_index)

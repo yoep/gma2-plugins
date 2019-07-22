@@ -17,9 +17,9 @@ function create_color_picker_macros()
     local exec_button_start = 100;
     local macro_index = _G.color_picker_macro_start_index;
 
-    log("Creating color picker macro's...")
+    log("Creating color picker macro's...");
     for group = 1, 7, 1 do
-        log("Creating color picker macros on line " .. macro_index)
+        log("Creating color picker macros on line " .. macro_index);
         local exec_button = exec_button_start + group;
 
         for cue = 1, 12, 1 do
@@ -29,7 +29,7 @@ function create_color_picker_macros()
 
         macro_index = macro_index + 16;
     end
-    log("Done creating color picker macro's")
+    log("Done creating color picker macro's");
 end
 
 function create_color_picker_fade_macros()
