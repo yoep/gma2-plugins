@@ -20,7 +20,7 @@ function create_position_picker_sequences()
         local sequence_index = _G.seq_start_index_position_picker + group;
 
         -- create sequence
-        gma.cmd(string.format("Store Sequence %i /m /nc", sequence_index))
+        gma.cmd(string.format("Store Sequence %i /o /nc", sequence_index))
         gma.cmd(string.format("Assign Sequence %i /name=\"POS %s\"", sequence_index, _G.macro_row_labels[group]));
 
         -- create queues
@@ -243,27 +243,26 @@ function main()
 
     local handle = gma.gui.progress.start(_G.plugin_name);
     gma.gui.progress.setrange(handle, 0, 5);
-    gma.gui.progress.set(handle, 0);
+    gma.gui.progress.set(handle, 1);
     gma.gui.progress.settext(handle, "creating sequences");
     create_position_picker_sequences();
 
-    gma.gui.progress.set(handle, 1);
+    gma.gui.progress.set(handle, 2);
     gma.gui.progress.settext(handle, "creating position macro's");
     create_position_picker_macros();
 
-    gma.gui.progress.set(handle, 2);
+    gma.gui.progress.set(handle, 3);
     gma.gui.progress.settext(handle, "creating fade macro's");
     create_position_picker_fade_macros();
 
-    gma.gui.progress.set(handle, 3);
+    gma.gui.progress.set(handle, 4);
     gma.gui.progress.settext(handle, "creating mode macro's");
     create_position_picker_mode_macros();
 
-    gma.gui.progress.set(handle, 4);
+    gma.gui.progress.set(handle, 5);
     gma.gui.progress.settext(handle, "initializing variables");
     initialize_position_picker_vars();
 
-    gma.gui.progress.set(handle, 5);
     gma.gui.progress.settext(handle, "done");
     gma.gui.progress.stop(handle);
 end
