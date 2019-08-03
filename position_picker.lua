@@ -2,32 +2,56 @@
 position_picker_page_var = "position_picker_page_index";
 position_picker_macro_var = "position_picker_macro_start_index";
 position_picker_sequence_var = "position_picker_sequence_start_index";
+position_picker_mode_var = "POS_PICKER_MODE";
 
 exec_page_position_picker = "";
 seq_start_index_position_picker = "";
 macro_start_index_position_picker = "";
 
+--- Position Picker static info
 position_macro_line_length = 16;
+macro_row_labels = { "BEAMS", "SPOT", "WASH1", "WASH2", "LED1", "LED2", "ALL" };
+macro_labels = { "LOWEST", "LOWER", "CENTER", "DEFAULT", "HIGHER", "HIGHEST", "SINGER", "G1", "G2", "KEYBOARD", "DRUMMER" };
+
+function create_position_picker_sequences()
+    log("Creating position picker sequences...")
+
+    for group = 1, 7, 1 do
+        local sequence_index = _G.seq_start_index_position_picker + group;
+
+        -- create sequence
+        gma.cmd(string.format("Store Sequence %i /m /nc", sequence_index))
+        gma.cmd(string.format("Assign Sequence %i /name=\"POS %s\"", sequence_index, _G.macro_row_labels[group]));
+
+        -- create queues
+        for cue = 1, 11, 1 do
+            gma.cmd(string.format("Store Sequence %i Cue %i.001 /m /nc", sequence_index, cue));
+            gma.cmd(string.format("Assign Sequence %i Cue %i.001 /name=\"%s\"", sequence_index, cue, _G.macro_labels[cue]));
+            gma.cmd(string.format("Store Sequence %i Cue %i.002 /m /nc", sequence_index, cue));
+            gma.cmd(string.format("Assign Sequence %i Cue %i.002 /name=\"%s <>\"", sequence_index, cue, _G.macro_labels[cue]));
+            gma.cmd(string.format("Store Sequence %i Cue %i.003 /m /nc", sequence_index, cue));
+            gma.cmd(string.format("Assign Sequence %i Cue %i.003 /name=\"%s ><\"", sequence_index, cue, _G.macro_labels[cue]));
+        end
+
+        gma.cmd(string.format("Delete Sequence %i Cue 1 /nc", sequence_index))
+    end
+
+    log("Done creating position picker sequences")
+end
 
 function create_position_picker_macros()
+    log("Creating position picker macro's...");
     local exec_button_start = 100;
     local macro_index = _G.macro_start_index_position_picker;
-    local macro_row_labels = { "BEAMS", "SPOT", "WASH1", "WASH2", "LED1", "LED2", "ALL" };
-    local macro_labels = { "LOWEST", "LOWER", "CENTER", "DEFAULT", "HIGHER", "HIGHEST", "SINGER", "G1", "G2", "KEYBOARD", "DRUMMER" };
 
-    log("Creating position picker macro's...")
     for group = 1, 7, 1 do
         log("Creating position picker macros on line " .. macro_index)
         local exec_button = exec_button_start + group;
         local sequence_index = _G.seq_start_index_position_picker + group;
 
         -- create new row macro label
-        gma.cmd(string.format("Store Macro %i", macro_index));
-        gma.cmd(string.format("Assign Macro %i /name=\"%s\"", macro_index, macro_row_labels[group]));
-
-        -- create sequence
-        gma.cmd(string.format("Store Sequence %i /n", sequence_index))
-        gma.cmd(string.format("Assign Sequence %i /name=\"%s\"", sequence_index, macro_row_labels[group]));
+        gma.cmd(string.format("Store Macro %i /o /nc", macro_index));
+        gma.cmd(string.format("Assign Macro %i /name=\"%s\"", macro_index, _G.macro_row_labels[group]));
 
         -- create executor
         gma.cmd(string.format("Store Executor %s", get_position_picker_executor(exec_button)));
@@ -40,11 +64,12 @@ function create_position_picker_macros()
             gma.cmd(string.format("Delete Macro %i", macro));
 
             -- create new macro and label
-            gma.cmd(string.format("Store Macro %i", macro));
-            gma.cmd(string.format("Assign Macro %i /name=\"%s\"", macro, macro_labels[cue]));
+            gma.cmd(string.format("Store Macro %i /o /nc", macro));
+            gma.cmd(string.format("Assign Macro %i /name=\"%s\"", macro, _G.macro_labels[cue]));
 
-            gma.cmd(string.format("Store Macro 1.%i.1 Thru 1.%i.4", macro, macro))
-            gma.cmd(string.format("Assign Macro 1.%i.1 /cmd=\"Goto Executor %s Cue %i\"", macro, get_position_picker_executor(exec_button), cue));
+            gma.cmd(string.format("Store Macro 1.%i.1 Thru 1.%i.4 /o /nc", macro, macro))
+            gma.cmd(string.format("Assign Macro 1.%i.1 /cmd=\"Goto Executor %s Cue %i.00$%s\"",
+                    macro, get_position_picker_executor(exec_button), cue, _G.position_picker_mode_var));
 
             -- add the appearance commands
             if group == 7 then
@@ -88,12 +113,27 @@ function create_position_picker_fade_macros()
     log("Done creating position picker fade macro's");
 end
 
+function create_position_picker_mode_macros()
+    log("Creating position picker mode macro's...");
+    local macro_index = get_position_picker_mode_macro_start_index();
+
+    create_position_picker_mode_macro(macro_index, 1, "DEFAULT");
+    create_position_picker_mode_macro(macro_index, 2, "<>");
+    create_position_picker_mode_macro(macro_index, 3, "><");
+
+    log("Done creating position picker mode macro's");
+end
+
 function get_position_picker_executor(executor_index)
     return string.format("%i.%i", _G.exec_page_position_picker, executor_index);
 end
 
 function get_position_picker_fade_macro_start_index()
     return _G.macro_start_index_position_picker + 113;
+end
+
+function get_position_picker_mode_macro_start_index()
+    return get_position_picker_fade_macro_start_index() + _G.position_macro_line_length;
 end
 
 --- Set the appearance cmd command for the macro line
@@ -120,7 +160,7 @@ function set_color_for_macro_all(macro)
     local color_macro = macro;
 
     gma.cmd(string.format("Assign Macro 1.%i.2 /cmd=\"Appearance Macro %i Thru %i /reset\"",
-            macro,  _G.macro_start_index_position_picker, _G.macro_start_index_position_picker + 107));
+            macro, _G.macro_start_index_position_picker, _G.macro_start_index_position_picker + 107));
 
     gma.cmd(string.format("Store Macro 1.%i.5 Thru 1.%i.10", macro, macro))
 
@@ -161,6 +201,29 @@ function create_position_picker_fade_macro(macro_index, fade_time)
             macro_index, macro_index, get_color_green()));
 end
 
+--- Create a new position mode macro
+---
+---@param macro_index number The macro index to create the position mode macro in.
+---@param mode number The mode value of the position mode macro.
+---@param name string The name of the position mode macro.
+function create_position_picker_mode_macro(macro_index, mode, name)
+    -- create and label macro
+    gma.cmd(string.format("Store Macro %i /o /nc", macro_index));
+    gma.cmd(string.format("Assign Macro %i /name=\"%s\"", macro_index, name));
+
+    -- create cmd
+    gma.cmd(string.format("Store Macro 1.%i.1 /o /nc", macro_index));
+    gma.cmd(string.format("Assign Macro 1.%i.1 /cmd=\"SetVar %s=%i\"", macro_index, _G.position_picker_mode_var, mode));
+end
+
+function initialize_position_picker_vars()
+    log("Initializing position picker vars...");
+
+    gma.cmd(string.format("SetVar %s=1", _G.position_picker_mode_var));
+
+    log("Done initializing position picker vars");
+end
+
 --- Plugin Entry Point
 function main()
     gma.cmd("ClearAll");
@@ -178,8 +241,31 @@ function main()
     -- set the page index for the executors
     _G.page_index = _G.exec_page_position_picker;
 
+    local handle = gma.gui.progress.start(_G.plugin_name);
+    gma.gui.progress.setrange(handle, 0, 5);
+    gma.gui.progress.set(handle, 0);
+    gma.gui.progress.settext(handle, "creating sequences");
+    create_position_picker_sequences();
+
+    gma.gui.progress.set(handle, 1);
+    gma.gui.progress.settext(handle, "creating position macro's");
     create_position_picker_macros();
+
+    gma.gui.progress.set(handle, 2);
+    gma.gui.progress.settext(handle, "creating fade macro's");
     create_position_picker_fade_macros();
+
+    gma.gui.progress.set(handle, 3);
+    gma.gui.progress.settext(handle, "creating mode macro's");
+    create_position_picker_mode_macros();
+
+    gma.gui.progress.set(handle, 4);
+    gma.gui.progress.settext(handle, "initializing variables");
+    initialize_position_picker_vars();
+
+    gma.gui.progress.set(handle, 5);
+    gma.gui.progress.settext(handle, "done");
+    gma.gui.progress.stop(handle);
 end
 
 function finalize()

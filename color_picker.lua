@@ -108,8 +108,19 @@ function main()
     -- The start of the sequence index for the color picker
     _G.color_picker_sequence_start_index = show_user_var_input_number(_G.color_picker_sequence_var, "Sequence start index of the Color Picker");
 
+    local handle = gma.gui.progress.start(_G.plugin_name);
+    gma.gui.progress.setrange(handle, 0, 2);
+    gma.gui.progress.set(handle, 0);
+    gma.gui.progress.settext(handle, "creating color macro's");
     create_color_picker_macros();
+
+    gma.gui.progress.set(handle, 1);
+    gma.gui.progress.settext(handle, "creating fade macro's");
     create_color_picker_fade_macros();
+
+    gma.gui.progress.set(handle, 2);
+    gma.gui.progress.settext(handle, "done");
+    gma.gui.progress.stop(handle);
 end
 
 function finalize()
