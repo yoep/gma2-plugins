@@ -69,6 +69,7 @@ function get_color_picker_fade_macro_start_index()
 end
 
 --- Create a new fade macro
+---
 ---@param macro_index number The macro index to create the fade macro in
 ---@param fade_time number The fade time that the fade macro applies to the color picker
 function create_color_picker_fade_macro(macro_index, fade_time)
