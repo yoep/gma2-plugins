@@ -101,7 +101,7 @@ function create_color_exec_buttons()
 
     sequence = sequence + 1;
     create_sequence(sequence, "GROUPS", get_full_executor_index(_G.executor_groups_index), nil, true);
-    create_group_cues(sequence);
+    create_group_cues(sequence, effect_index_color, create_cue_cmd_executor_off(_G.executor_groups_index));
 
     sequence = sequence + 1;
     create_sequence(sequence, "BLOCKS", get_full_executor_index(_G.executor_blocks_index), nil, true);
@@ -221,15 +221,6 @@ function create_form_cues(sequence)
     create_cue(sequence, 10, "C SIN MY PWM", string.format("Assign Form 8 At Effect 1.%i.1; Assign Effect 1.%i.1 /phase=0..360 /width=100; Assign Form 4 At Effect 1.%i.1 Thru 1.%i.3 - 1.%i.1; Assign Effect 1.%i.2 /phase=90 /width=50; Assign Effect 1.%i.3 /phase=-90 /width=50", _G.effect_index_color, _G.effect_index_color, _G.effect_index_color, _G.effect_index_color, _G.effect_index_color, _G.effect_index_color, _G.effect_index_color));
     create_cue(sequence, 11, "M SIN CY PWM", string.format("Assign Form 8 At Effect 1.%i.2; Assign Effect 1.%i.2 /phase=0..360 /width=100; Assign Form 4 At Effect 1.%i.1 Thru 1.%i.3 - 1.%i.2; Assign Effect 1.%i.1 /phase=90 /width=50; Assign Effect 1.%i.3 /phase=-90 /width=50", _G.effect_index_color, _G.effect_index_color, _G.effect_index_color, _G.effect_index_color, _G.effect_index_color, _G.effect_index_color, _G.effect_index_color));
     create_cue(sequence, 12, "Y SIN CM PWM", string.format("Assign Form 8 At Effect 1.%i.3; Assign Effect 1.%i.3 /phase=0..360 /width=100; Assign Form 4 At Effect 1.%i.1 Thru 1.%i.3 - 1.%i.3; Assign Effect 1.%i.1 /phase=90 /width=50; Assign Effect 1.%i.2 /phase=-90 /width=50", _G.effect_index_color, _G.effect_index_color, _G.effect_index_color, _G.effect_index_color, _G.effect_index_color, _G.effect_index_color, _G.effect_index_color));
-end
-
-function create_group_cues(sequence)
-    create_cue(sequence, 0, "OFF", string.format("Assign Effect %i /groups=0 /rate=1; %s", effect_index_color, create_cue_cmd_executor_off(_G.executor_groups_index)));
-    create_cue(sequence, 1, "G2", string.format("Assign Effect %i /groups=2 /rate=0.5", effect_index_color));
-    create_cue(sequence, 2, "G3", string.format("Assign Effect %i /groups=3 /rate=0.33", effect_index_color));
-    create_cue(sequence, 3, "G4", string.format("Assign Effect %i /groups=4 /rate=0.25", effect_index_color));
-    create_cue(sequence, 4, "G6", string.format("Assign Effect %i /groups=6 /rate=0.16", effect_index_color));
-    create_cue(sequence, 5, "G8", string.format("Assign Effect %i /groups=8 /rate=0.125", effect_index_color));
 end
 
 function create_block_cues(sequence)

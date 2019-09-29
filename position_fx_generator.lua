@@ -214,11 +214,11 @@ end
 
 function create_group_cues_position(sequence)
     create_cue(sequence, 0, "OFF", string.format("Assign Effect %i /groups=0 /rate=1; %s", _G.effect_index_position, create_cue_cmd_executor_off(_G.executor_groups_index_position)));
-    create_cue(sequence, 1, "GROUP 2", string.format("Assign Effect %i /groups=2 /rate=0.5", _G.effect_index_position));
-    create_cue(sequence, 2, "GROUP 3", string.format("Assign Effect %i /groups=3 /rate=0.33", _G.effect_index_position));
-    create_cue(sequence, 3, "GROUP 4", string.format("Assign Effect %i /groups=4 /rate=0.25", _G.effect_index_position));
-    create_cue(sequence, 4, "GROUP 6", string.format("Assign Effect %i /groups=6 /rate=0.16", _G.effect_index_position));
-    create_cue(sequence, 5, "GROUP 8", string.format("Assign Effect %i /groups=8 /rate=0.125", _G.effect_index_position));
+    create_cue(sequence, 1, "GROUP 1", string.format("Assign Effect %i /groups=1 /rate=1", _G.effect_index_position));
+    create_cue(sequence, 2, "GROUP 2", string.format("Assign Effect %i /groups=2 /rate=0.5", _G.effect_index_position));
+    create_cue(sequence, 3, "GROUP 3", string.format("Assign Effect %i /groups=3 /rate=0.33", _G.effect_index_position));
+    create_cue(sequence, 4, "GROUP 4", string.format("Assign Effect %i /groups=4 /rate=0.25", _G.effect_index_position));
+    create_cue(sequence, 5, "GROUP 6", string.format("Assign Effect %i /groups=6 /rate=0.16", _G.effect_index_position));
 end
 
 function create_block_cues_position(sequence)

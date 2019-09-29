@@ -10,6 +10,7 @@ macro_start_index_position_picker = "";
 
 --- Position Picker static info
 position_macro_line_length = 16;
+position_preset_line_length = 12;
 macro_row_labels = { "BEAMS", "SPOT", "WASH1", "WASH2", "LED1", "LED2", "ALL" };
 macro_labels = { "LOWEST", "LOWER", "CENTER", "DEFAULT", "HIGHER", "HIGHEST", "SINGER", "G1", "G2", "KEYBOARD", "DRUMMER" };
 
@@ -19,18 +20,18 @@ function create_position_picker_sequences()
     for group = 1, 7, 1 do
         local sequence_index = _G.seq_start_index_position_picker + group;
 
+        -- delete sequence
+        gma.cmd(string.format("Delete Sequence %i /nc", sequence_index));
+
         -- create sequence
         gma.cmd(string.format("Store Sequence %i /o /nc", sequence_index))
         gma.cmd(string.format("Assign Sequence %i /name=\"POS %s\"", sequence_index, _G.macro_row_labels[group]));
 
         -- create queues
         for cue = 1, 11, 1 do
-            gma.cmd(string.format("Store Sequence %i Cue %i.001 /m /nc", sequence_index, cue));
-            gma.cmd(string.format("Assign Sequence %i Cue %i.001 /name=\"%s\"", sequence_index, cue, _G.macro_labels[cue]));
-            gma.cmd(string.format("Store Sequence %i Cue %i.002 /m /nc", sequence_index, cue));
-            gma.cmd(string.format("Assign Sequence %i Cue %i.002 /name=\"%s <>\"", sequence_index, cue, _G.macro_labels[cue]));
-            gma.cmd(string.format("Store Sequence %i Cue %i.003 /m /nc", sequence_index, cue));
-            gma.cmd(string.format("Assign Sequence %i Cue %i.003 /name=\"%s ><\"", sequence_index, cue, _G.macro_labels[cue]));
+            create_position_picker_sequence_cues(group, sequence_index, cue, 1, _G.macro_labels[cue]);
+            create_position_picker_sequence_cues(group, sequence_index, cue, 2, _G.macro_labels[cue] .. " <>");
+            create_position_picker_sequence_cues(group, sequence_index, cue, 3, _G.macro_labels[cue] .. " ><");
         end
 
         gma.cmd(string.format("Delete Sequence %i Cue 1 /nc", sequence_index))
@@ -117,9 +118,13 @@ function create_position_picker_mode_macros()
     log("Creating position picker mode macro's...");
     local macro_index = get_position_picker_mode_macro_start_index();
 
-    create_position_picker_mode_macro(macro_index, 1, "DEFAULT");
-    create_position_picker_mode_macro(macro_index, 2, "<>");
-    create_position_picker_mode_macro(macro_index, 3, "><");
+    create_position_picker_mode_macro(macro_index, 1, "NORMAL", get_position_picker_mode_macro_start_index());
+
+    macro_index = macro_index + 1;
+    create_position_picker_mode_macro(macro_index, 2, "<>", get_position_picker_mode_macro_start_index());
+
+    macro_index = macro_index + 1;
+    create_position_picker_mode_macro(macro_index, 3, "><", get_position_picker_mode_macro_start_index());
 
     log("Done creating position picker mode macro's");
 end
@@ -206,14 +211,48 @@ end
 ---@param macro_index number The macro index to create the position mode macro in.
 ---@param mode number The mode value of the position mode macro.
 ---@param name string The name of the position mode macro.
-function create_position_picker_mode_macro(macro_index, mode, name)
+---@param macro_mode_start_index number The start index of the mode macro's
+function create_position_picker_mode_macro(macro_index, mode, name, macro_mode_start_index)
     -- create and label macro
     gma.cmd(string.format("Store Macro %i /o /nc", macro_index));
     gma.cmd(string.format("Assign Macro %i /name=\"%s\"", macro_index, name));
 
     -- create cmd
-    gma.cmd(string.format("Store Macro 1.%i.1 /o /nc", macro_index));
-    gma.cmd(string.format("Assign Macro 1.%i.1 /cmd=\"SetVar %s=%i\"", macro_index, _G.position_picker_mode_var, mode));
+    gma.cmd(string.format("Store Macro 1.%i.1 Thru 1.%i.3 /o /nc",
+            macro_index, macro_index));
+    gma.cmd(string.format("Assign Macro 1.%i.1 /cmd=\"SetVar %s=%i\"",
+            macro_index, _G.position_picker_mode_var, mode));
+    gma.cmd(string.format("Assign Macro 1.%i.2 /cmd=\"Appearance Macro %i Thru % i %s\"",
+            macro_index, macro_mode_start_index, macro_mode_start_index + 3, get_color_cyan()));
+    gma.cmd(string.format("Assign Macro 1.%i.3 /cmd=\"Appearance Macro %i %s\"",
+            macro_index, macro_index, get_color_green()));
+end
+
+--- Create the cues for the sequence with activated position for the group
+---
+---@param group number The group index to activate in the cue.
+---@param sequence_index number The sequence index to store the cue in.
+---@param cue number The cue index to store.
+---@param mode number The sub cue (or mode) to store.
+---@param name string The name of the cue.
+function create_position_picker_sequence_cues(group, sequence_index, cue, mode, name)
+    -- select the group and activate the position
+    gma.cmd(get_group(group));
+
+    if mode == 1 then
+        gma.cmd(string.format("At Preset 2.%i", cue));
+    elseif mode == 2 then
+        gma.cmd(string.format("At Preset 2.%i", (cue * _G.position_preset_line_length) + 1));
+    elseif mode == 3 then
+        gma.cmd(string.format("At Preset 2.%i", (cue * _G.position_preset_line_length) + 2));
+    end
+
+    -- store the selection + position in the correct cue within the sequence & label the cue
+    gma.cmd(string.format("Store Sequence %i Cue %i.00%i /o /nc", sequence_index, cue, mode));
+    gma.cmd(string.format("Assign Sequence %i Cue %i.00%i /name=\"%s\"", sequence_index, cue, mode, name));
+
+    -- clear selection & position
+    clear_all();
 end
 
 function initialize_position_picker_vars()
@@ -226,7 +265,7 @@ end
 
 --- Plugin Entry Point
 function main()
-    gma.cmd("ClearAll");
+    clear_all();
 
     -- Set plugin name for logging
     _G.plugin_name = "Position Picker";

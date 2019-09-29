@@ -219,6 +219,18 @@ function create_dir_cues(sequence, effect_index)
     create_cue(sequence, 4, "> BOUNCE", string.format("Assign Effect %i /dir=>bounce", effect_index));
 end
 
+--- Create group cues for setting the group of an effect
+---@param sequence number The sequence index to assign the cue to.
+---@param effect_index number The effect index to modify the group of.
+---@param executor_off_cmd string The cmd command to turn off the executor.
+function create_group_cues(sequence, effect_index, executor_off_cmd)
+    create_cue(sequence, 0, "OFF", string.format("Assign Effect %i /groups=0 /rate=1; %s", effect_index, executor_off_cmd));
+
+    for i = 1, 8 do
+        create_cue(sequence, i, "G" .. i, string.format("Assign Effect %i /groups=%i /rate=%s", effect_index, i, 1 / i));
+    end
+end
+
 ---
 --- MACRO FUNCTIONS
 ---
@@ -291,6 +303,11 @@ function show_user_var_input_number(name, text)
     gma.show.setvar(name, new_value);
 
     return new_value;
+end
+
+--- Call the clear all command in MA2
+function clear_all()
+    gma.cmd("ClearAll");
 end
 
 --- Plugin Entry Point

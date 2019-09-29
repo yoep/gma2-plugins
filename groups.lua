@@ -17,6 +17,7 @@ group_led1_index = 60;
 group_led2_index = 70;
 group_blinders_index = 80;
 group_strobes_index = 90;
+group_indexes = { group_beams_index, group_spots_index, group_wash1_index, group_wash2_index, group_led1_index, group_led2_index, group_all_index };
 
 --- Group names
 group_all_name = "ALL";
@@ -43,6 +44,66 @@ group_vars_blinders_subgroups = "group_vars_blinders_subgroups";
 ---@return number Returns the number of subgroups for the blinders.
 function get_subgroups_blinders()
     return tonumber(get_show_var(group_vars_blinders_subgroups));
+end
+
+--- Get the group for the given index.
+---@return string The group command for the group at the given index.
+function get_group(index)
+    return "Group " .. _G.group_indexes[index];
+end
+
+--- Get the group for all
+---@return string The all group command.
+function get_group_all()
+    return "Group " .. _G.group_all_index;
+end
+
+--- Get the group for blinders
+---@return string The blinders group command.
+function get_group_blinders()
+    return "Group " .. _G.group_beams_index;
+end
+
+--- Get the group for spots
+---@return string The spots group command.
+function get_group_spots()
+    return "Group " .. _G.group_spots_index;
+end
+
+--- Get the group for wash1
+---@return string The wash1 group command.
+function get_group_wash1()
+    return "Group " .. _G.group_wash1_index;
+end
+
+--- Get the group for wash2
+---@return string The wash2 group command.
+function get_group_wash2()
+    return "Group " .. _G.group_wash2_index;
+end
+
+--- Get the group for led1
+---@return string The led1 group command.
+function get_group_led1()
+    return "Group " .. _G.group_led1_index;
+end
+
+--- Get the group for led2
+---@return string The led2 group command.
+function get_group_led2()
+    return "Group " .. _G.group_led2_index;
+end
+
+--- Get the group for blinders
+---@return string The blinders group command.
+function get_group_blinders()
+    return "Group " .. _G.group_blinders_index;
+end
+
+--- Get the group for strobes
+---@return string The strobes group command.
+function get_group_strobes()
+    return "Group " .. _G.group_strobes_name;
 end
 
 ---
@@ -99,7 +160,14 @@ function main()
     --- Request the subgroups of the blinders
     _G.group_subgroups_blinders = show_user_var_input(_G.group_vars_blinders_subgroups, string.format("Total %s subgroups", _G.group_blinders_name));
 
+    local handle = gma.gui.progress.start(_G.plugin_name);
+    gma.gui.progress.setrange(handle, 0, 1);
+    gma.gui.progress.set(handle, 1);
+    gma.gui.progress.settext(handle, "creating groups");
     create_groups();
+
+    gma.gui.progress.settext(handle, "done");
+    gma.gui.progress.stop(handle);
 end
 
 function finalize()
