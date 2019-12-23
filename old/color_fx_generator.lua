@@ -118,27 +118,27 @@ function create_color_exec_buttons()
     sequence = sequence + 1;
     create_sequence(sequence, "BEAM", get_full_executor_index(_G.executor_beam_index), get_color_red());
     create_cue(sequence, 1, "ON", create_cue_cmd_group_on(_G.effect_index_color, 1, 3, _G.beam_color_var, _G.group_beams_index, get_color_groups_cmd()));
-    create_cue(sequence, 2, "OFF", create_cue_cmd_group_off(_G.effect_index_color, 1, 3, _G.beam_color_var, _G.group_beams_index, get_color_groups_cmd()));
+    create_cue(sequence, 2, "OFF", create_cue_cmd_group_off(_G.effect_index_color, 1, 3, _G.beam_color_var, get_color_groups_cmd()));
 
     sequence = sequence + 1;
     create_sequence(sequence, "SPOT", get_full_executor_index(_G.executor_spot_index), get_color_red());
     create_cue(sequence, 1, "ON", create_cue_cmd_group_on(_G.effect_index_color, 1, 3, _G.spot_color_var, _G.group_spots_index, get_color_groups_cmd()));
-    create_cue(sequence, 2, "OFF", create_cue_cmd_group_off(_G.effect_index_color, 1, 3, _G.spot_color_var, _G.group_spots_index, get_color_groups_cmd()));
+    create_cue(sequence, 2, "OFF", create_cue_cmd_group_off(_G.effect_index_color, 1, 3, _G.spot_color_var, get_color_groups_cmd()));
 
     sequence = sequence + 1;
     create_sequence(sequence, "WASH 1", get_full_executor_index(_G.executor_wash1_index), get_color_red());
     create_cue(sequence, 1, "ON", create_cue_cmd_group_on(_G.effect_index_color, 1, 3, _G.wash1_color_var, _G.group_wash1_index, get_color_groups_cmd()));
-    create_cue(sequence, 2, "OFF", create_cue_cmd_group_off(_G.effect_index_color, 1, 3, _G.wash1_color_var, _G.group_wash1_index, get_color_groups_cmd()));
+    create_cue(sequence, 2, "OFF", create_cue_cmd_group_off(_G.effect_index_color, 1, 3, _G.wash1_color_var, get_color_groups_cmd()));
 
     sequence = sequence + 1;
     create_sequence(sequence, "WASH 2", get_full_executor_index(_G.executor_wash2_index), get_color_red());
     create_cue(sequence, 1, "ON", create_cue_cmd_group_on(_G.effect_index_color, 1, 3, _G.wash2_color_var, _G.group_wash2_index, get_color_groups_cmd()));
-    create_cue(sequence, 2, "OFF", create_cue_cmd_group_off(_G.effect_index_color, 1, 3, _G.wash2_color_var, _G.group_wash2_index, get_color_groups_cmd()));
+    create_cue(sequence, 2, "OFF", create_cue_cmd_group_off(_G.effect_index_color, 1, 3, _G.wash2_color_var, get_color_groups_cmd()));
 
     sequence = sequence + 1;
     create_sequence(sequence, "LED", get_full_executor_index(_G.executor_led_index), get_color_red());
     create_cue(sequence, 1, "ON", create_cue_cmd_group_on(_G.effect_index_color, 1, 3, _G.led_color_var, _G.group_led1_index, get_color_groups_cmd()));
-    create_cue(sequence, 2, "OFF", create_cue_cmd_group_off(_G.effect_index_color, 1, 3, _G.led_color_var, _G.group_led1_index, get_color_groups_cmd()));
+    create_cue(sequence, 2, "OFF", create_cue_cmd_group_off(_G.effect_index_color, 1, 3, _G.led_color_var, get_color_groups_cmd()));
 
     log("Done creating color picker exec buttons");
 end
