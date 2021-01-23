@@ -7,6 +7,7 @@
 color_picker_page_var = "color_picker_page_index";
 color_picker_macro_var = "color_picker_macro_start_index";
 color_picker_sequence_var = "color_picker_sequence_start_index";
+color_picker_time_var = "COL_FADE";
 
 --- Color picker values
 color_picker_exec_page_index = "";
@@ -84,13 +85,15 @@ function create_color_picker_fade_macro(macro_index, fade_time)
     gma.cmd(string.format("Store Macro %i /o /nc", macro_index));
     gma.cmd(string.format("Assign Macro %i /name=\"Fade %ss\"", macro_index, fade_time));
     -- create macro lines
-    gma.cmd(string.format("Store Macro 1.%i.1 Thru 1.%i.3", macro_index, macro_index));
+    gma.cmd(string.format("Store Macro 1.%i.1 Thru 1.%i.4", macro_index, macro_index));
     -- assign cmd commands to macro lines
     gma.cmd(string.format("Assign Macro 1.%i.1 /cmd=\"Assign Sequence %i Thru %i Cue 1 Thru 12 /fade = %s\"",
             macro_index, _G.color_picker_sequence_start_index, _G.color_picker_sequence_start_index + 7, fade_time));
     gma.cmd(string.format("Assign Macro 1.%i.2 /cmd=\"Appearance Macro %i Thru %i - %i /reset\"",
             macro_index, fade_macro_start_index, fade_macro_end_index, macro_index));
-    gma.cmd(string.format("Assign Macro 1.%i.3 /cmd=\"Appearance Macro %i %s\"",
+    gma.cmd(string.format("Assign Macro 1.%i.3 /cmd=\"SetVar %s %s\"",
+            macro_index, _G.color_picker_time_var, fade_time));
+    gma.cmd(string.format("Assign Macro 1.%i.4 /cmd=\"Appearance Macro %i %s\"",
             macro_index, macro_index, get_color_green()));
 end
 

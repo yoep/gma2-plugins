@@ -3,6 +3,7 @@ position_picker_page_var = "position_picker_page_index";
 position_picker_macro_var = "position_picker_macro_start_index";
 position_picker_sequence_var = "position_picker_sequence_start_index";
 position_picker_mode_var = "POS_PICKER_MODE";
+position_picker_time_var = "POS_FADE";
 
 exec_page_position_picker = "";
 seq_start_index_position_picker = "";
@@ -195,14 +196,16 @@ function create_position_picker_fade_macro(macro_index, fade_time)
     gma.cmd(string.format("Assign Macro %i /name=\"Fade %ss\"", macro_index, fade_time));
 
     -- create macro lines
-    gma.cmd(string.format("Store Macro 1.%i.1 Thru 1.%i.3", macro_index, macro_index));
+    gma.cmd(string.format("Store Macro 1.%i.1 Thru 1.%i.4", macro_index, macro_index));
 
     -- assign cmd commands to macro lines
     gma.cmd(string.format("Assign Macro 1.%i.1 /cmd=\"Assign Sequence %i Thru %i Cue 1 Thru 11 /fade = %s\"",
             macro_index, _G.seq_start_index_position_picker, _G.seq_start_index_position_picker + 7, fade_time));
     gma.cmd(string.format("Assign Macro 1.%i.2 /cmd=\"Appearance Macro %i Thru %i - %i /reset\"",
             macro_index, fade_macro_start_index, fade_macro_end_index, macro_index));
-    gma.cmd(string.format("Assign Macro 1.%i.3 /cmd=\"Appearance Macro %i %s\"",
+    gma.cmd(string.format("Assign Macro 1.%i.3 /cmd=\"SetVar %s %s\"",
+            macro_index, _G.position_picker_time_var, fade_time));
+    gma.cmd(string.format("Assign Macro 1.%i.4 /cmd=\"Appearance Macro %i %s\"",
             macro_index, macro_index, get_color_green()));
 end
 
