@@ -38,6 +38,15 @@ function clear_all()
     gma.cmd("ClearAll");
 end
 
+--- Label the given preset index with the given name.
+---@param preset    number  The preset pool number.
+---@param index     number  The preset pool index to which the name should be assigned.
+---@param name      string  The name for the preset pool index.
+function preset_label(preset, index, name)
+    gma.cmd(string.format("Store Preset %i.%i /nc", preset, index));
+    gma.cmd(string.format("Assign Preset %i.%i /name=\"%s\"", preset, index, name));
+end
+
 --- Plugin Entry Point
 function main()
     --- no-op

@@ -36,7 +36,9 @@ executor_led_index = 125;
 --- Effect config
 zoom_effect_line_index = 4;
 dim_effect_line_index = 5;
-shutter_effect_line_index = 8;
+dim2_effect_line_index = 6;
+shutter_effect_line_index = 9;
+shutter2_effect_line_index = 10;
 
 --- **********************
 --- DO NOT EDIT BELOW THIS
@@ -57,8 +59,8 @@ function create_color_exec_buttons()
 
     sequence = sequence + 1;
     create_sequence(sequence, "DIM", get_full_executor_index(_G.executor_dim_index));
-    create_cue(sequence, 1, "ON", create_cue_cmd_on("1." .. effect_index_color .. "." .. _G.dim_effect_line_index, get_color_groups_cmd()));
-    create_cue(sequence, 2, "OFF", create_cue_cmd_off("1." .. effect_index_color .. "." .. _G.dim_effect_line_index));
+    create_cue(sequence, 1, "ON", create_cue_cmd_on(string.format("1.%i.%i Thru 1.%i.%i", effect_index_color, _G.dim_effect_line_index, effect_index_color, _G.dim2_effect_line_index), get_color_groups_cmd()));
+    create_cue(sequence, 2, "OFF", create_cue_cmd_off(string.format("1.%i.%i Thru 1.%i.%i", effect_index_color, _G.dim_effect_line_index, effect_index_color, _G.dim2_effect_line_index)));
 
     sequence = sequence + 1;
     create_sequence(sequence, "GOBO", get_full_executor_index(_G.executor_gobo_index));

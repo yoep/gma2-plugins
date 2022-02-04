@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<MA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.malighting.de/grandma2/xml/MA" xsi:schemaLocation="http://schemas.malighting.de/grandma2/xml/MA http://schemas.malighting.de/grandma2/xml/3.9.0/MA.xsd" major_vers="3" minor_vers="9" stream_vers="0">
+	<Info datetime="2022-02-04T23:14:30" showfile="v2" />
+	<Effect index="1" name="COLOR FX">
+		<Forms>
+			<Form index="4" name="Chase" display_2d="false">
+				<SubForm index="0" display_spec_index="0" graph_color="c0c0c0">
+					<SubFormPoint index="0" mode="linear" />
+					<SubFormPoint index="1" x="0.16666667" y="1" mode="linear" />
+					<SubFormPoint index="2" x="0.5" y="1" mode="linear" />
+					<SubFormPoint index="3" x="0.66666669" mode="linear" />
+				</SubForm>
+			</Form>
+		</Forms>
+		<Effectline index="0" attribute="COLORRGB1" blocks="0" groups="3" wings="8" rate="0.333" v1_a="100" v1_b="100" v2_a="100" v2_b="100" phase_a="0" phase_b="360" width_a="33.333" width_b="33.333" pwm_attack="0" pwm_decay="0" interleave="0">
+			<flags pwm_type="Chase" reverse="true" absolute_mode="true" attack="0" decay="0" speed_master="2" />
+			<v1_p name="LOW FX2 4.102">
+				<No>1</No>
+				<No>4</No>
+				<No>102</No>
+			</v1_p>
+			<v2_p name="HIGH FX2 4.103">
+				<No>1</No>
+				<No>4</No>
+				<No>103</No>
+			</v2_p>
+		</Effectline>
+		<Effectline index="1" attribute="COLORRGB2" blocks="0" groups="3" wings="8" rate="0.333" v1_a="0" v1_b="0" v2_a="100" v2_b="100" phase_a="0" phase_b="360" width_a="33.333" width_b="33.333" pwm_attack="0" pwm_decay="0" interleave="0">
+			<flags pwm_type="Chase" reverse="true" absolute_mode="true" attack="0" decay="0" speed_master="2" />
+			<v1_p name="LOW FX2 4.102">
+				<No>1</No>
+				<No>4</No>
+				<No>102</No>
+			</v1_p>
+			<v2_p name="HIGH FX2 4.103">
+				<No>1</No>
+				<No>4</No>
+				<No>103</No>
+			</v2_p>
+		</Effectline>
+		<Effectline index="2" attribute="COLORRGB3" blocks="0" groups="3" wings="8" rate="0.333" v1_a="0" v1_b="0" v2_a="100" v2_b="100" phase_a="0" phase_b="360" width_a="33.333" width_b="33.333" pwm_attack="0" pwm_decay="0" interleave="0">
+			<flags pwm_type="Chase" reverse="true" absolute_mode="true" attack="0" decay="0" speed_master="2" />
+			<v1_p name="LOW FX2 4.102">
+				<No>1</No>
+				<No>4</No>
+				<No>102</No>
+			</v1_p>
+			<v2_p name="HIGH FX2 4.103">
+				<No>1</No>
+				<No>4</No>
+				<No>103</No>
+			</v2_p>
+		</Effectline>
+		<Effectline index="3" attribute="ZOOM" blocks="0" groups="3" wings="8" rate="0.333" v1_a="49.999" v1_b="49.999" v2_a="25" v2_b="25" phase_a="0" phase_b="360" width_a="33.333" width_b="33.333" pwm_attack="0" pwm_decay="0" interleave="0">
+			<flags pwm_type="Chase" reverse="true" absolute_mode="true" attack="0" decay="0" speed_master="2" />
+			<v1_p name="NORMAL 6.3">
+				<No>1</No>
+				<No>6</No>
+				<No>3</No>
+			</v1_p>
+			<v2_p name="SMALL 6.2">
+				<No>1</No>
+				<No>6</No>
+				<No>2</No>
+			</v2_p>
+		</Effectline>
+		<Effectline index="4" attribute="DIM" blocks="0" groups="3" wings="0" rate="0.333" v1_a="-50" v1_b="-50" v2_a="0" v2_b="0" phase_a="0" phase_b="360" width_a="100" width_b="100" pwm_attack="0" pwm_decay="0" interleave="0">
+			<flags pwm_type="Chase" reverse="true" attack="0" decay="0" speed_master="2" />
+		</Effectline>
+		<Effectline index="5" attribute="DIM2" blocks="0" groups="3" wings="0" rate="0.333" v1_a="-50" v1_b="-50" v2_a="0" v2_b="0" phase_a="0" phase_b="360" width_a="100" width_b="100" pwm_attack="0" pwm_decay="0" interleave="0">
+			<flags pwm_type="Chase" reverse="true" attack="0" decay="0" speed_master="2" />
+		</Effectline>
+		<Effectline index="6" attribute="GOBO1" blocks="0" groups="3" wings="8" rate="0.333" v1_a="0" v1_b="0" v2_a="100" v2_b="100" phase_a="0" phase_b="360" width_a="100" width_b="100" pwm_attack="0" pwm_decay="0" interleave="0">
+			<flags pwm_type="Chase" reverse="true" absolute_mode="true" attack="0" decay="0" speed_master="2" />
+			<v1_p name="LOW FX2 3.102">
+				<No>1</No>
+				<No>3</No>
+				<No>102</No>
+			</v1_p>
+			<v2_p name="HIGH FX2 3.103">
+				<No>1</No>
+				<No>3</No>
+				<No>103</No>
+			</v2_p>
+		</Effectline>
+		<Effectline index="7" attribute="GOBO2" blocks="0" groups="3" wings="8" rate="0.333" v1_a="0" v1_b="0" v2_a="100" v2_b="100" phase_a="0" phase_b="360" width_a="100" width_b="100" pwm_attack="0" pwm_decay="0" interleave="0">
+			<flags pwm_type="Chase" reverse="true" absolute_mode="true" attack="0" decay="0" speed_master="2" />
+			<v1_p name="LOW FX2 3.102">
+				<No>1</No>
+				<No>3</No>
+				<No>102</No>
+			</v1_p>
+			<v2_p name="HIGH FX2 3.103">
+				<No>1</No>
+				<No>3</No>
+				<No>103</No>
+			</v2_p>
+		</Effectline>
+		<Effectline index="8" attribute="SHUTTER" blocks="0" groups="3" wings="0" rate="0.333" v1_a="0" v1_b="0" v2_a="100" v2_b="100" phase_a="0" phase_b="360" width_a="100" width_b="100" pwm_attack="0" pwm_decay="0" interleave="0">
+			<flags pwm_type="Chase" absolute_mode="true" attack="0" decay="0" speed_master="2" />
+			<v1_p name="OPEN 5.1">
+				<No>1</No>
+				<No>5</No>
+				<No>1</No>
+			</v1_p>
+			<v2_p name="MAX 5.3">
+				<No>1</No>
+				<No>5</No>
+				<No>3</No>
+			</v2_p>
+		</Effectline>
+		<Effectline index="9" attribute="SHUTTER2" blocks="0" groups="3" wings="0" rate="0.333" v1_a="0" v1_b="0" v2_a="100" v2_b="100" phase_a="0" phase_b="360" width_a="100" width_b="100" pwm_attack="0" pwm_decay="0" interleave="0">
+			<flags pwm_type="Chase" absolute_mode="true" attack="0" decay="0" speed_master="2" />
+			<v1_p name="OPEN 5.1">
+				<No>1</No>
+				<No>5</No>
+				<No>1</No>
+			</v1_p>
+			<v2_p name="MAX 5.3">
+				<No>1</No>
+				<No>5</No>
+				<No>3</No>
+			</v2_p>
+		</Effectline>
+	</Effect>
+</MA>
